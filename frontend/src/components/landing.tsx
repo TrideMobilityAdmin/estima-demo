@@ -115,8 +115,7 @@ const Landing: React.FC = () => {
           transition: "background-color 0.3s ease",
         }}
       >
-        {/* Left Logo */}
-        <div style={{justifyContent:'center'}}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
           <img
             src={gmrIcon}
             style={{
