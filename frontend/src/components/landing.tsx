@@ -21,7 +21,7 @@ import {
   IconMessageCircle,
   IconLogout,
 } from "@tabler/icons-react";
-import gmrIcon from "../../public/GMR_Icon.jpeg";
+import gmrIcon from "../../public/tride_icon1.png";
 import aircraftServiceBg from "../../public/airCraft6.jpeg";
 import bgEstimate from "../../public/airCraft10.jpg";
 import bgCompareEstimate from "../../public/airCraft8.jpg";
@@ -116,13 +116,13 @@ const Landing: React.FC = () => {
         }}
       >
         {/* Left Logo */}
-        <div>
+        <div style={{justifyContent:'center'}}>
           <img
             src={gmrIcon}
             style={{
-              height: "3em",
+              height: "2em",
               cursor: "pointer",
-              borderRadius: 15,
+              borderRadius: 0,
             }}
             onClick={() => {
               navigate("/home");
@@ -183,12 +183,20 @@ const Landing: React.FC = () => {
           <Menu.Dropdown>
             <Card w="100%">
               <Flex direction="column" align="center" justify="center">
-                <Avatar src={gmrIcon} variant="light" radius="md" size="lg" />
+                {/* <Avatar src={gmrIcon} variant="light" w='100%' radius={0}/> */}
+                <img
+            src={gmrIcon}
+            style={{
+              height: "2em",
+              cursor: "pointer",
+              borderRadius: 0,
+            }}
+          />
                 <Text fw="bold" size="md">
-                  GMR EstimaAI
+                  Tride - Admin
                 </Text>
                 <Text size="xs" c="dimmed">
-                  gmr@evrides.live
+                  {/* gmr@evrides.live */}
                 </Text>
               </Flex>
             </Card>
@@ -307,7 +315,7 @@ export default Landing;
 //   IconMessageCircle,
 //   IconLogout,
 // } from "@tabler/icons-react";
-// import gmrIcon from "../../public/GMR_Icon.jpeg";
+// import gmrIcon from "../../public/tride_icon1.png";
 // import aircraftServiceBg from "../../public/airCraft6.jpeg";
 // import bgEstimate from "../../public/airCraft10.jpg";
 // import bgCompareEstimate from "../../public/airCraft8.jpg";
@@ -583,7 +591,7 @@ export default Landing;
 //   IconMessageCircle,
 //   IconLogout,
 // } from "@tabler/icons-react";
-// import gmrIcon from "../../public/GMR_Icon.jpeg";
+// import gmrIcon from "../../public/tride_icon1.png";
 // import aircraftServiceBg from "../../public/airCraft6.jpeg";
 // import bgEstimate from "../../public/airCraft10.jpg";
 // import bgCompareEstimate from "../../public/airCraft8.jpg";

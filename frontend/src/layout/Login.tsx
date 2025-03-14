@@ -27,11 +27,11 @@ import {
   // airportTrolleyImg,
 } from "../constants/GlobalImports";
 import flightBg  from '../../public/airCraft8.jpg'
-import { Overlay } from "@mantine/core";
+import { Group, Overlay } from "@mantine/core";
 import { entityID, roleID, userID, userName, userToken } from "../components/tokenJotai";
 import { clearAuthState, saveAuthData } from "../main";
 import { getUserLogin_Url } from "../api/apiUrls";
-
+import gmrIcon from "../../public/tride_icon1.png";
 // const validCredentials = [
 //   { email: "gmr@evrides.live", password: "gmr@evrides" },
 //   { email: "admin@tridemobility.com", password: "admin" },
@@ -78,70 +78,71 @@ function Login() {
   // const [roleId, setRoleID] = useAtom(roleID);
   // const [entityId, setEntityID] = useAtom(entityID);
   const login = async (values: LoginInput) => {
-    setIsLoading(true);
-    try {
-      const response = await axios.post(getUserLogin_Url, {
-        username: values.username,
-        password: values.password,
-      });
+    navigate("/home");
+//     setIsLoading(true);
+//     try {
+//       const response = await axios.post(getUserLogin_Url, {
+//         username: values.username,
+//         password: values.password,
+//       });
 
-      const { 
-        accessToken, 
-        userID, 
-        username
-        // roleID, 
-        // entityID 
-      } = response.data;
+//       const { 
+//         accessToken, 
+//         userID, 
+//         username
+//         // roleID, 
+//         // entityID 
+//       } = response.data;
 
-      // console.log("responese login >>>>",response.data)
-      if (response.status === 200) {
-        // Save user details and token
-        setToken(accessToken);
-        setUserID(userID);
-        setName(username);
-        // setRoleID(roleID);
-        // setEntityID(entityID);
+//       // console.log("responese login >>>>",response.data)
+//       if (response.status === 200) {
+//         // Save user details and token
+//         setToken(accessToken);
+//         setUserID(userID);
+//         setName(username);
+//         // setRoleID(roleID);
+//         // setEntityID(entityID);
 
-        sessionStorage.setItem("token", accessToken);
-        sessionStorage.setItem("userID", userID);
-        sessionStorage.setItem("username", username);
-        // sessionStorage.setItem("roleID", roleID);
-        // sessionStorage.setItem("entityID", entityID);
-// Verify that the token is stored
-const storedToken = sessionStorage.getItem("token");
-const storedName = sessionStorage.getItem("username");
-console.log("✅ Token stored in sessionStorage:", storedToken);  
-console.log("user stored in sessionStorage:", storedName);  
-        saveAuthData({ token, status: "authenticated" });
+//         sessionStorage.setItem("token", accessToken);
+//         sessionStorage.setItem("userID", userID);
+//         sessionStorage.setItem("username", username);
+//         // sessionStorage.setItem("roleID", roleID);
+//         // sessionStorage.setItem("entityID", entityID);
+// // Verify that the token is stored
+// const storedToken = sessionStorage.getItem("token");
+// const storedName = sessionStorage.getItem("username");
+// console.log("✅ Token stored in sessionStorage:", storedToken);  
+// console.log("user stored in sessionStorage:", storedName);  
+//         saveAuthData({ token, status: "authenticated" });
 
-        showNotification({
-          title: "Login Successful",
-          message: "Welcome to EstimaAI",
-          color: "green",
-          style: { position: "fixed", bottom: 20, right: 20, zIndex: 1000 },
-        });
-        setIsLoading(false);
-        // Redirect to dashboard
-        navigate("/home");
-        // window.location.reload();
-      } else {
-        setIsLoading(false);
-        throw new Error("Invalid credentials or server error");
-      }
-    } catch (error: any) {
-      setIsLoading(false);
-      clearAuthState();
-      console.log("errorrrrr", error);
-      const errorMessage =
-        error.response?.data?.responseMsg || "Something went wrong!";
+//         showNotification({
+//           title: "Login Successful",
+//           message: "Welcome to EstimaAI",
+//           color: "green",
+//           style: { position: "fixed", bottom: 20, right: 20, zIndex: 1000 },
+//         });
+//         setIsLoading(false);
+//         // Redirect to dashboard
+//         navigate("/home");
+//         // window.location.reload();
+//       } else {
+//         setIsLoading(false);
+//         throw new Error("Invalid credentials or server error");
+//       }
+//     } catch (error: any) {
+//       setIsLoading(false);
+//       clearAuthState();
+//       console.log("errorrrrr", error);
+//       const errorMessage =
+//         error.response?.data?.responseMsg || "Something went wrong!";
 
-      showNotification({
-        title: "Login Failed",
-        message: errorMessage,
-        color: "red",
-        style: { position: "fixed", bottom: 20, right: 20, zIndex: 1000 },
-      });
-    }
+//       showNotification({
+//         title: "Login Failed",
+//         message: errorMessage,
+//         color: "red",
+//         style: { position: "fixed", bottom: 20, right: 20, zIndex: 1000 },
+//       });
+//     }
   };
 
   // console.log("token.....",token);
@@ -225,8 +226,10 @@ console.log("user stored in sessionStorage:", storedName);
               {...form.getInputProps("password")}
             />
             <Checkbox label="Keep me logged in" mt="xl" size="md" />
-            <Button loading={isLoading} type="submit" bg="#000DB4" fullWidth mt="xl" size="md">
-              Login
+            <Button loading={isLoading} type="submit" bg="black" c='orange' fullWidth mt="xl" size="md">
+
+                Login
+              
             </Button>
           </form>
         </Paper>
