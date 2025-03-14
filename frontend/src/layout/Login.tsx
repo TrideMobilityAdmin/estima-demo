@@ -79,70 +79,70 @@ function Login() {
   // const [entityId, setEntityID] = useAtom(entityID);
   const login = async (values: LoginInput) => {
     navigate("/home");
-//     setIsLoading(true);
-//     try {
-//       const response = await axios.post(getUserLogin_Url, {
-//         username: values.username,
-//         password: values.password,
-//       });
+    setIsLoading(true);
+    try {
+      const response = await axios.post(getUserLogin_Url, {
+        username: values.username,
+        password: values.password,
+      });
 
-//       const { 
-//         accessToken, 
-//         userID, 
-//         username
-//         // roleID, 
-//         // entityID 
-//       } = response.data;
+      const { 
+        accessToken, 
+        userID, 
+        username
+        // roleID, 
+        // entityID 
+      } = response.data;
 
-//       // console.log("responese login >>>>",response.data)
-//       if (response.status === 200) {
-//         // Save user details and token
-//         setToken(accessToken);
-//         setUserID(userID);
-//         setName(username);
-//         // setRoleID(roleID);
-//         // setEntityID(entityID);
+      // console.log("responese login >>>>",response.data)
+      if (response.status === 200) {
+        // Save user details and token
+        setToken(accessToken);
+        setUserID(userID);
+        setName(username);
+        // setRoleID(roleID);
+        // setEntityID(entityID);
 
-//         sessionStorage.setItem("token", accessToken);
-//         sessionStorage.setItem("userID", userID);
-//         sessionStorage.setItem("username", username);
-//         // sessionStorage.setItem("roleID", roleID);
-//         // sessionStorage.setItem("entityID", entityID);
-// // Verify that the token is stored
-// const storedToken = sessionStorage.getItem("token");
-// const storedName = sessionStorage.getItem("username");
-// console.log("✅ Token stored in sessionStorage:", storedToken);  
-// console.log("user stored in sessionStorage:", storedName);  
-//         saveAuthData({ token, status: "authenticated" });
+        sessionStorage.setItem("token", accessToken);
+        sessionStorage.setItem("userID", userID);
+        sessionStorage.setItem("username", username);
+        // sessionStorage.setItem("roleID", roleID);
+        // sessionStorage.setItem("entityID", entityID);
+// Verify that the token is stored
+const storedToken = sessionStorage.getItem("token");
+const storedName = sessionStorage.getItem("username");
+console.log("✅ Token stored in sessionStorage:", storedToken);  
+console.log("user stored in sessionStorage:", storedName);  
+        saveAuthData({ token, status: "authenticated" });
 
-//         showNotification({
-//           title: "Login Successful",
-//           message: "Welcome to EstimaAI",
-//           color: "green",
-//           style: { position: "fixed", bottom: 20, right: 20, zIndex: 1000 },
-//         });
-//         setIsLoading(false);
-//         // Redirect to dashboard
-//         navigate("/home");
-//         // window.location.reload();
-//       } else {
-//         setIsLoading(false);
-//         throw new Error("Invalid credentials or server error");
-//       }
-//     } catch (error: any) {
-//       setIsLoading(false);
-//       clearAuthState();
-//       console.log("errorrrrr", error);
-//       const errorMessage =
-//         error.response?.data?.responseMsg || "Something went wrong!";
+        showNotification({
+          title: "Login Successful",
+          message: "Welcome to EstimaAI",
+          color: "green",
+          style: { position: "fixed", bottom: 20, right: 20, zIndex: 1000 },
+        });
+        setIsLoading(false);
+        // Redirect to dashboard
+        navigate("/home");
+        // window.location.reload();
+      } else {
+        setIsLoading(false);
+        throw new Error("Invalid credentials or server error");
+      }
+    } catch (error: any) {
+      setIsLoading(false);
+      clearAuthState();
+      console.log("errorrrrr", error);
+      const errorMessage =
+        error.response?.data?.responseMsg || "Something went wrong!";
 
-//       showNotification({
-//         title: "Login Failed",
-//         message: errorMessage,
-//         color: "red",
-//         style: { position: "fixed", bottom: 20, right: 20, zIndex: 1000 },
-//       });
-//     }
+      showNotification({
+        title: "Login Failed",
+        message: errorMessage,
+        color: "red",
+        style: { position: "fixed", bottom: 20, right: 20, zIndex: 1000 },
+      });
+    }
   };
 
   // console.log("token.....",token);
