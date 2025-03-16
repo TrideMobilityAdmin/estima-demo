@@ -2443,23 +2443,13 @@ border-bottom: none;
                                             estimatedManHrs={estimateReportData?.overallEstimateReport?.estimateManhrs || {}}
                                             estimatedSparesCost={estimateReportData?.overallEstimateReport?.estimatedSpareCost || 0}
                                             cappingUnbilledCost={0}
-                                            parts={[
-                                                { partDesc: "Bolt", partName: "M12 Bolt", qty: 4.0, price: 10.00, unit: "" },
-                                                { partDesc: "Screw", partName: "Wood Screw", qty: 2.0, price: 5.00, unit: "" },
-                                                { partDesc: "Bolt", partName: "M12 Bolt", qty: 4.0, price: 10.00, unit: "" },
-                                                { partDesc: "Screw", partName: "Wood Screw", qty: 2.0, price: 5.00, unit: "" },
-                                                { partDesc: "Bolt", partName: "M12 Bolt", qty: 4.0, price: 10.00, unit: "" },
-                                                { partDesc: "Screw", partName: "Wood Screw", qty: 2.0, price: 5.00, unit: "" },
-                                                { partDesc: "Bolt", partName: "M12 Bolt", qty: 4.0, price: 10.00, unit: "" },
-                                                { partDesc: "Screw", partName: "Wood Screw", qty: 2.0, price: 5.00, unit: "" },
-                                                { partDesc: "Bolt", partName: "M12 Bolt", qty: 4.0, price: 10.00, unit: "" },
-                                                { partDesc: "Screw", partName: "Wood Screw", qty: 2.0, price: 5.00, unit: "" },
-                                                { partDesc: "Bolt", partName: "M12 Bolt", qty: 4.0, price: 10.00, unit: "" },
-                                                { partDesc: "Screw", partName: "Wood Screw", qty: 2.0, price: 5.00, unit: "" },
-                                                { partDesc: "Bolt", partName: "M12 Bolt", qty: 4.0, price: 10.00, unit: "" },
-                                                { partDesc: "Screw", partName: "Wood Screw", qty: 2.0, price: 5.00, unit: "" },
-
-                                            ]}
+                                            parts={
+                                                estimateReportData?.overallEstimateReport?.spareParts || []
+                                            //     [
+                                            //       { partDesc: "Bolt", partName: "M12 Bolt", qty: 4.0, price: 10.00, unit: "" },
+                                            //       { partDesc: "Screw", partName: "Wood Screw", qty: 2.0, price: 5.00, unit: "" },
+                                            //     ]
+                                        }
                                             spareCostData={[
                                                 { date: "Min", Cost: 100 },
                                                 { date: "Estimated", Cost: 800 },
@@ -2710,7 +2700,7 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
                     // }}
                     columnDefs={[
                       {
-                        field: "partName",
+                        field: "partId",
                         headerName: "Part Number",
                         flex: 1.5,
                         minWidth: 120,
@@ -2720,7 +2710,7 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
                         floatingFilter: true,
                       },
                       {
-                        field: "partDesc",
+                        field: "desc",
                         headerName: "Description",
                         flex: 1.5,
                         minWidth: 120,
@@ -2813,7 +2803,7 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
   
   
 
-const FindingsWiseSection: React.FC<FindingsWiseSectionProps> = ({ findings }) => {
+  const FindingsWiseSection: React.FC<FindingsWiseSectionProps> = ({ findings }) => {
     const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
     const [selectedCluster, setSelectedCluster] = useState<any>(null);
     const [selectedFindingDetail, setSelectedFindingDetail] = useState<FindingDetail | null>(null);
