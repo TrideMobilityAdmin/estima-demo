@@ -3446,11 +3446,11 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
                                         </Grid.Col>
                                         <Grid.Col span={8}>
                                             <Progress w="100%" color="#E07B39" radius="md" size="lg" 
-                                                value={selectedFindingDetail?.prob || 0} />
+                                                value={(selectedFindingDetail?.prob)*100 || 0} />
                                         </Grid.Col>
                                         <Grid.Col span={2}>
                                             <Text size="sm" fw={600} c="#E07B39">
-                                                { selectedFindingDetail?.prob || 0} %
+                                                { (selectedFindingDetail?.prob)*100 || 0} %
                                             </Text>
                                         </Grid.Col>
                                     </Grid>
@@ -3624,7 +3624,7 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
                                                     return (
                                                         <>
                                                         <Text>
-                                                            {val?.data?.prob || 0}
+                                                            {(val?.data?.prob)*100 || 0}
                                                         </Text>
                                                         </>
                                                     )
