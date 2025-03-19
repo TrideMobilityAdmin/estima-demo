@@ -614,6 +614,9 @@ class TaskService:
                         'partDescription': {
                             '$first': '$part_description'
                         }, 
+                        'unit': {
+                            '$first': '$unit_of_measurement'
+                        }, 
                         'tasks': {
                             '$push': {
                                 'taskId': '$task_number', 
@@ -700,7 +703,8 @@ class TaskService:
     }, {
         '$project': {
             '_id': '$partData._id', 
-            'partDescription': '$partData.partDescription', 
+            'partDescription': '$partData.partDescription',
+            'unit': '$partData.unit',
             'tasks': '$partData.tasks', 
             'summary': 1
         }
@@ -1076,6 +1080,7 @@ class TaskService:
             output = {
                 "partId": part_id,
                 "partDescription": task_parts_result[0].get("partDescription", "") if task_parts_result else "",
+                "unit": task_parts_result[0].get("unit", "") if task_parts_result else "",
                 "usage": {
                     "tasks": [
                         {
