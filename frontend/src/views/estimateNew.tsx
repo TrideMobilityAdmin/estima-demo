@@ -56,6 +56,7 @@ import { useApiSkillAnalysis } from "../api/services/skillsService";
 import { useMemo, useRef } from "react";
 import { userName } from "../components/tokenJotai";
 import excelTemplateFile from '../assets/RFQ_Excel_Template.xlsx';  
+import estimateData from '../../src/assets/IHV_output.json';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -279,32 +280,6 @@ export default function EstimateNew() {
         XLSX.writeFile(wb, `Estimate_${selectedEstimateId}_${status ? 'Available' : 'NotAvailable'}.xlsx`);
     };
 
-    // Handle extracted tasks
-    // const handleTasks = (extractedTasks: string[]) => {
-    //     setTasks(extractedTasks);
-    //     console.log("tasks :", extractedTasks);
-    // };
-
-    //  Extracted tasks are passed to validation API
-    // const handleTasks = async (extractedTasks: string[]) => {
-    //     setIsLoading(true);
-    //     setTasks(extractedTasks);
-
-    //     console.log("Extracted Tasks:", extractedTasks);
-    //     const response = await validateTasks(extractedTasks);
-    //     setValidatedTasks(response);
-    //     setIsLoading(false);
-
-    //     const invalidTasks = response?.filter((task) => task?.status === false);
-    //     if (invalidTasks.length > 0) {
-    //         showNotification({
-    //             title: "Tasks Not Available!",
-    //             message: `${invalidTasks.length} tasks are not available. Only valid tasks will be used to generate Estimate.`,
-    //             color: "orange",
-    //             style: { position: "fixed", top: 100, right: 20, zIndex: 1000 },
-    //         });
-    //     }
-    // }
 
     // Form initialization
     const form = useForm({
@@ -515,6 +490,7 @@ export default function EstimateNew() {
         fetchEstimatesStatus();
     };
 
+    // Api Call by est id
     const fetchEstimateById = async (id: string) => {
         if (!id) return;
         setEstimateReportLoading(true);
@@ -524,6 +500,30 @@ export default function EstimateNew() {
         }
         setEstimateReportLoading(false);
     };
+
+    // Load data from local JSON file based on ID
+    // const fetchEstimateById = (id: string) => {
+    //     // if (!id) return;
+        
+    //     setEstimateReportLoading(true);
+        
+    //     try {
+    //         // Find the matching estimate in your local JSON file
+    //         // const matchingEstimate = estimateData.find((estimate: any) => estimate.estID === id);
+            
+    //         // if (matchingEstimate) {
+    //             setEstReportData(estimateData);
+    //         // } else {
+    //         //     console.error(`Estimate with ID ${id} not found in local data`);
+    //             // setEstReportData(null);
+    //         // }
+    //     } catch (error) {
+    //         console.error("Error loading estimate data:", error);
+    //         setEstReportData(null);
+    //     } finally {
+    //         setEstimateReportLoading(false);
+    //     }
+    // };
 
     // Call API when `selectedEstimateId` changes
     useEffect(() => {
@@ -2389,7 +2389,8 @@ border-bottom: none;
                                 Selected Estimate  :
                             </Title>
                             <Title order={4}>
-                                {estimateReportData?.estID || "-"}
+                                {/* {estimateReportData?.estID || "-"} */}
+                                {selectedEstimateIdReport || "-"}
                             </Title>
                         </Group>
                     ) : (
@@ -2451,9 +2452,9 @@ border-bottom: none;
                                             //     ]
                                         }
                                             spareCostData={[
-                                                { date: "Min", Cost: 100 },
-                                                { date: "Estimated", Cost: 800 },
-                                                { date: "Max", Cost: 1000 },
+                                                { date: "Min", Cost: Math.round(estimateReportData?.overallEstimateReport?.estimatedSpareCost * 0.85) },
+                                                { date: "Estimated", Cost: Math.round(estimateReportData?.overallEstimateReport?.estimatedSpareCost) },
+                                                { date: "Max", Cost: Math.round(estimateReportData?.overallEstimateReport?.estimatedSpareCost * 1.10) },
                                             ]}
                                             // totalTATTime={44}
                                             // estimatedManHrs={{ min: 40, estimated: 66, max: 46, capping: 46 }}
@@ -2970,7 +2971,8 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
             desc: part.desc,
             qty: part.qty || 1, // Default to 1 if not specified
             unit: part.unit,
-            price: part.price || 0 // Default to 0 if not specified
+            price: part.price || 0, // Default to 0 if not specified
+            prob : part.prob || 0
         }));
     }, [selectedFindingDetail]);
 
@@ -2994,7 +2996,8 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
                             partDesc: part.desc,
                             unit: part.unit,
                             qty: part.qty,
-                            price: part.price
+                            price: part.price,
+                            prob: part.prob
                         });
                     });
                 } else {
@@ -3010,7 +3013,8 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
                         partDesc: '-',
                         unit: '-',
                         qty: 0,
-                        price:0
+                        price:0,
+                        prob: 0
                     });
                 }
             });
@@ -3078,6 +3082,22 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
                 return (
                     <Text>
                         {val?.data?.price?.toFixed(2) || "-"}
+                    </Text>
+                )
+            }
+        },
+        { 
+            headerName: 'Part Probability', 
+            field: 'prob', 
+            filter: true, 
+            sortable: true, 
+            floatingFilter: true, 
+            resizable: true, 
+            width: 200,
+            cellRenderer: (val :any) => {
+                return (
+                    <Text>
+                        {val?.data?.prob?.toFixed(2) || "-"}
                     </Text>
                 )
             }
@@ -3484,7 +3504,7 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
                                     Skills 
                                 </Text>
                                 
-                                <SimpleGrid cols={8}>
+                                <SimpleGrid cols={4}>
                                     { 
                                      selectedFindingDetail?.skill?.map((skl: any, index: number) => (
                                         <Badge key={index} fullWidth color="cyan" size="lg" radius="md">
@@ -3587,6 +3607,22 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
                                                         <>
                                                         <Text>
                                                             {val?.data?.price?.toFixed(2) || 0}
+                                                        </Text>
+                                                        </>
+                                                    )
+                                                }
+                                            },
+                                            {
+                                                field: "prob",
+                                                headerName: "Prob",
+                                                sortable: true,
+                                                resizable: true,
+                                                flex: 1,
+                                                cellRenderer:(val:any)=>{
+                                                    return (
+                                                        <>
+                                                        <Text>
+                                                            {val?.data?.prob || 0}
                                                         </Text>
                                                         </>
                                                     )
