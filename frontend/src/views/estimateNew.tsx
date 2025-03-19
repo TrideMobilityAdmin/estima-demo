@@ -2972,7 +2972,7 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
             qty: part.qty || 1, // Default to 1 if not specified
             unit: part.unit,
             price: part.price || 0, // Default to 0 if not specified
-            prob : part.prob || 0
+            // prob : part.prob || 0
         }));
     }, [selectedFindingDetail]);
 
@@ -2997,7 +2997,7 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
                             unit: part.unit,
                             qty: part.qty,
                             price: part.price,
-                            prob: part.prob
+                            // prob: part.prob
                         });
                     });
                 } else {
@@ -3014,7 +3014,7 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
                         unit: '-',
                         qty: 0,
                         price:0,
-                        prob: 0
+                        // prob: 0
                     });
                 }
             });
@@ -3086,22 +3086,22 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
                 )
             }
         },
-        { 
-            headerName: 'Part Probability', 
-            field: 'prob', 
-            filter: true, 
-            sortable: true, 
-            floatingFilter: true, 
-            resizable: true, 
-            width: 200,
-            cellRenderer: (val :any) => {
-                return (
-                    <Text>
-                        {val?.data?.prob?.toFixed(2) || "-"}
-                    </Text>
-                )
-            }
-        },
+        // { 
+        //     headerName: 'Part Probability', 
+        //     field: 'prob', 
+        //     filter: true, 
+        //     sortable: true, 
+        //     floatingFilter: true, 
+        //     resizable: true, 
+        //     width: 200,
+        //     cellRenderer: (val :any) => {
+        //         return (
+        //             <Text>
+        //                 {val?.data?.prob?.toFixed(2) || "-"}
+        //             </Text>
+        //         )
+        //     }
+        // },
     ];
 
     const downloadCSV = () => {
@@ -3612,22 +3612,22 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
                                                     )
                                                 }
                                             },
-                                            {
-                                                field: "prob",
-                                                headerName: "Prob",
-                                                sortable: true,
-                                                resizable: true,
-                                                flex: 1,
-                                                cellRenderer:(val:any)=>{
-                                                    return (
-                                                        <>
-                                                        <Text>
-                                                            {val?.data?.prob || 0}
-                                                        </Text>
-                                                        </>
-                                                    )
-                                                }
-                                            },
+                                            // {
+                                            //     field: "prob",
+                                            //     headerName: "Prob",
+                                            //     sortable: true,
+                                            //     resizable: true,
+                                            //     flex: 1,
+                                            //     cellRenderer:(val:any)=>{
+                                            //         return (
+                                            //             <>
+                                            //             <Text>
+                                            //                 {val?.data?.prob || 0}
+                                            //             </Text>
+                                            //             </>
+                                            //         )
+                                            //     }
+                                            // },
                                         ]}
                                     />
                                 </div>
