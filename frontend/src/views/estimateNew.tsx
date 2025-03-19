@@ -491,39 +491,39 @@ export default function EstimateNew() {
     };
 
     // Api Call by est id
-    const fetchEstimateById = async (id: string) => {
-        if (!id) return;
-        setEstimateReportLoading(true);
-        const data = await getEstimateByID(id);
-        if (data) {
-            setEstReportData(data);
-        }
-        setEstimateReportLoading(false);
-    };
+    // const fetchEstimateById = async (id: string) => {
+    //     if (!id) return;
+    //     setEstimateReportLoading(true);
+    //     const data = await getEstimateByID(id);
+    //     if (data) {
+    //         setEstReportData(data);
+    //     }
+    //     setEstimateReportLoading(false);
+    // };
 
     // Load data from local JSON file based on ID
-    // const fetchEstimateById = (id: string) => {
-    //     // if (!id) return;
+    const fetchEstimateById = (id: string) => {
+        // if (!id) return;
         
-    //     setEstimateReportLoading(true);
+        setEstimateReportLoading(true);
         
-    //     try {
-    //         // Find the matching estimate in your local JSON file
-    //         // const matchingEstimate = estimateData.find((estimate: any) => estimate.estID === id);
+        try {
+            // Find the matching estimate in your local JSON file
+            // const matchingEstimate = estimateData.find((estimate: any) => estimate.estID === id);
             
-    //         // if (matchingEstimate) {
-    //             setEstReportData(estimateData);
-    //         // } else {
-    //         //     console.error(`Estimate with ID ${id} not found in local data`);
-    //             // setEstReportData(null);
-    //         // }
-    //     } catch (error) {
-    //         console.error("Error loading estimate data:", error);
-    //         setEstReportData(null);
-    //     } finally {
-    //         setEstimateReportLoading(false);
-    //     }
-    // };
+            // if (matchingEstimate) {
+                setEstReportData(estimateData);
+            // } else {
+            //     console.error(`Estimate with ID ${id} not found in local data`);
+                // setEstReportData(null);
+            // }
+        } catch (error) {
+            console.error("Error loading estimate data:", error);
+            setEstReportData(null);
+        } finally {
+            setEstimateReportLoading(false);
+        }
+    };
 
     // Call API when `selectedEstimateId` changes
     useEffect(() => {
@@ -2972,7 +2972,7 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
             qty: part.qty || 1, // Default to 1 if not specified
             unit: part.unit,
             price: part.price || 0, // Default to 0 if not specified
-            // prob : part.prob || 0
+            prob : part.prob || 0
         }));
     }, [selectedFindingDetail]);
 
@@ -2997,7 +2997,7 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
                             unit: part.unit,
                             qty: part.qty,
                             price: part.price,
-                            // prob: part.prob
+                            prob: part.prob
                         });
                     });
                 } else {
@@ -3014,7 +3014,7 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
                         unit: '-',
                         qty: 0,
                         price:0,
-                        // prob: 0
+                        prob: 0
                     });
                 }
             });
@@ -3086,22 +3086,22 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
                 )
             }
         },
-        // { 
-        //     headerName: 'Part Probability', 
-        //     field: 'prob', 
-        //     filter: true, 
-        //     sortable: true, 
-        //     floatingFilter: true, 
-        //     resizable: true, 
-        //     width: 200,
-        //     cellRenderer: (val :any) => {
-        //         return (
-        //             <Text>
-        //                 {val?.data?.prob?.toFixed(2) || "-"}
-        //             </Text>
-        //         )
-        //     }
-        // },
+        { 
+            headerName: 'Part Probability', 
+            field: 'prob', 
+            filter: true, 
+            sortable: true, 
+            floatingFilter: true, 
+            resizable: true, 
+            width: 200,
+            cellRenderer: (val :any) => {
+                return (
+                    <Text>
+                        {val?.data?.prob?.toFixed(2) || "-"}
+                    </Text>
+                )
+            }
+        },
     ];
 
     const downloadCSV = () => {
@@ -3123,7 +3123,8 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
             "Part Description",
             "Quantity",
             "Unit",
-            "Price"
+            "Price",
+            "Part Probability",
         ];
 
         // Function to escape CSV fields
@@ -3151,6 +3152,7 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
             escapeCSVField(task.qty),
             escapeCSVField(task.unit),
             escapeCSVField(task.price),
+            escapeCSVField(task.prob),
         ]);
 
         // Convert array to CSV format
@@ -3612,22 +3614,22 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
                                                     )
                                                 }
                                             },
-                                            // {
-                                            //     field: "prob",
-                                            //     headerName: "Prob",
-                                            //     sortable: true,
-                                            //     resizable: true,
-                                            //     flex: 1,
-                                            //     cellRenderer:(val:any)=>{
-                                            //         return (
-                                            //             <>
-                                            //             <Text>
-                                            //                 {val?.data?.prob || 0}
-                                            //             </Text>
-                                            //             </>
-                                            //         )
-                                            //     }
-                                            // },
+                                            {
+                                                field: "prob",
+                                                headerName: "Prob",
+                                                sortable: true,
+                                                resizable: true,
+                                                flex: 1,
+                                                cellRenderer:(val:any)=>{
+                                                    return (
+                                                        <>
+                                                        <Text>
+                                                            {val?.data?.prob || 0}
+                                                        </Text>
+                                                        </>
+                                                    )
+                                                }
+                                            },
                                         ]}
                                     />
                                 </div>
