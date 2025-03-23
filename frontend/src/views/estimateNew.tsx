@@ -3097,7 +3097,7 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
             cellRenderer: (val :any) => {
                 return (
                     <Text>
-                        {val?.data?.prob?.toFixed(2) || "-"}
+                        {val?.data?.prob?.toFixed(2) || "-" } '%'
                     </Text>
                 )
             }
@@ -3616,7 +3616,7 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
                                             },
                                             {
                                                 field: "prob",
-                                                headerName: "Prob",
+                                                headerName: "Prob(%)",
                                                 sortable: true,
                                                 resizable: true,
                                                 flex: 1,
@@ -3624,7 +3624,7 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
                                                     return (
                                                         <>
                                                         <Text>
-                                                            {(val?.data?.prob)*100 || 0}
+                                                        {(val?.data?.prob ? val.data.prob * 100 : 0) + " %"}
                                                         </Text>
                                                         </>
                                                     )
