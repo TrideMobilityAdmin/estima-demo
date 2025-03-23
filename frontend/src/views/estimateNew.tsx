@@ -3087,7 +3087,7 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
             }
         },
         { 
-            headerName: 'Part Probability', 
+            headerName: 'Part Probability (%)', 
             field: 'prob', 
             filter: true, 
             sortable: true, 
