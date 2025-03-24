@@ -55,7 +55,7 @@ import SkillRequirementAnalytics from "./skillReqAnalytics";
 import { useApiSkillAnalysis } from "../api/services/skillsService";
 import { useMemo, useRef } from "react";
 import { userName } from "../components/tokenJotai";
-import excelTemplateFile from '../assets/RFQ_Excel_Template.xlsx';  
+import excelTemplateFile from '../assets/RFQ_Excel_Template.xlsx';
 import estimateData from '../../src/assets/IHV_output.json';
 
 dayjs.extend(utc);
@@ -67,6 +67,7 @@ export default function EstimateNew() {
     const { getSkillAnalysis } = useApiSkillAnalysis();
     const [currentUser] = useAtom(userName);
     const [value, setValue] = useState('estimate');
+    const [tabValue, setTabValue] = useState('overall');
     const [opened, setOpened] = useState(false);
     const [probOpened, setProbOpened] = useState(false);
     const [remarksOpened, setRemarksOpened] = useState(false);
@@ -188,29 +189,29 @@ export default function EstimateNew() {
         setSelectedFile(file);
         setExtractedTasks(tasks ?? []); // Ensure tasks is always an array
         setSheetInfo(fileSheetInfo);
-        
+
         console.log("✅ Selected File:", file ? file.name : "None");
         console.log("📌 Extracted Tasks:", tasks.length > 0 ? tasks : "No tasks found");
         console.log("From sheet:", fileSheetInfo?.sheetName);
         console.log("From column:", fileSheetInfo?.columnName);
-        
+
         if (tasks.length > 0) {
-        const response = await validateTasks(tasks);
-        setValidatedTasks(response);
-            
-        const invalidTasks = response.filter((task) => task.status === false);
-        if (invalidTasks.length > 0) {
-            showNotification({
-            title: "Tasks Not Available!",
-            message: `${invalidTasks.length} tasks are not available. Only valid tasks will be used for Skill Analysis.`,
-            color: "orange",
-            style: { position: "fixed", top: 100, right: 20, zIndex: 1000 },
-            });
-        }
+            const response = await validateTasks(tasks);
+            setValidatedTasks(response);
+
+            const invalidTasks = response.filter((task) => task.status === false);
+            if (invalidTasks.length > 0) {
+                showNotification({
+                    title: "Tasks Not Available!",
+                    message: `${invalidTasks.length} tasks are not available. Only valid tasks will be used for Skill Analysis.`,
+                    color: "orange",
+                    style: { position: "fixed", top: 100, right: 20, zIndex: 1000 },
+                });
+            }
         } else {
-        setValidatedTasks([]);
+            setValidatedTasks([]);
         }
-        
+
         setIsValidating(false);
     };
 
@@ -288,7 +289,7 @@ export default function EstimateNew() {
             probability: 0,
             operator: "",
             aircraftRegNo: "",
-            aircraftModel:"",
+            aircraftModel: "",
             aircraftAge: "",
             aircraftFlightHours: "",
             aircraftFlightCycles: "",
@@ -402,7 +403,7 @@ export default function EstimateNew() {
                 setRfqSubmissionResponse(response);
                 setRfqSubModalOpened(true);
                 showAppNotification("success", "Success!", "Estimate report submitted successfully!");
-                 // Reset form fields after successful submission
+                // Reset form fields after successful submission
                 form.reset();
                 // Reset related state variables
                 setSelectedFile(null); // Reset the selected file
@@ -504,18 +505,18 @@ export default function EstimateNew() {
     // Load data from local JSON file based on ID
     const fetchEstimateById = (id: string) => {
         // if (!id) return;
-        
+
         setEstimateReportLoading(true);
-        
+
         try {
             // Find the matching estimate in your local JSON file
             // const matchingEstimate = estimateData.find((estimate: any) => estimate.estID === id);
-            
+
             // if (matchingEstimate) {
-                setEstReportData(estimateData);
+            setEstReportData(estimateData);
             // } else {
             //     console.error(`Estimate with ID ${id} not found in local data`);
-                // setEstReportData(null);
+            // setEstReportData(null);
             // }
         } catch (error) {
             console.error("Error loading estimate data:", error);
@@ -553,7 +554,7 @@ export default function EstimateNew() {
 
     // Transform data for the chart
     const transformedData = probabilityWiseData?.estProb?.map((item: any) => ({
-        prob: item?.prob , // Multiply by 100 and round
+        prob: item?.prob, // Multiply by 100 and round
         totalManhrs: item?.totalManhrs,
         totalSpareCost: item?.totalSpareCost,
     }));
@@ -833,23 +834,23 @@ export default function EstimateNew() {
     //     ]
     //     // Create a new workbook
     //     const workbook = XLSX.utils.book_new();
-        
+
     //     // Create an empty worksheet with just the headers
     //     // We create an array with one empty row (just the headers)
     //     const worksheetData = [headers];
-        
+
     //     // Convert the data to a worksheet
     //     const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
-        
+
     //     // Add the worksheet to the workbook
     //     XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-        
+
     //     // Write the workbook to a binary string
     //     const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-        
+
     //     // Create a Blob from the buffer
     //     const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-        
+
     //     // Create a download link and trigger the download
     //     const url = URL.createObjectURL(blob);
     //     const link = document.createElement('a');
@@ -857,58 +858,58 @@ export default function EstimateNew() {
     //     link.download = filename;
     //     document.body.appendChild(link);
     //     link.click();
-        
+
     //     // Clean up
     //     document.body.removeChild(link);
     //     URL.revokeObjectURL(url);
     //   };
 
-      const downloadEmptyExcel = async () => {
+    const downloadEmptyExcel = async () => {
         try {
-          // Fetch the file from your project assets
-          const response = await fetch(excelTemplateFile);
-          
-          if (!response.ok) {
-            throw new Error('Failed to load the template file');
-          }
-          
-          // Get the file as blob
-          const blob = await response.blob();
-          
-          // Create a URL for the blob
-          const url = window.URL.createObjectURL(blob);
-          
-          // Create a temporary anchor element to trigger the download
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = 'RFQ_Template.xlsx'; // Name that will appear when downloading
-          document.body.appendChild(a);
-          
-          // Trigger the download
-          a.click();
-          
-          // Clean up
-          window.URL.revokeObjectURL(url);
-          document.body.removeChild(a);
-          
-          // Show success notification
-          showAppNotification(
-            'success',
-            'Successful!',
-            'RFQ template downloaded successfully',
-          );
+            // Fetch the file from your project assets
+            const response = await fetch(excelTemplateFile);
+
+            if (!response.ok) {
+                throw new Error('Failed to load the template file');
+            }
+
+            // Get the file as blob
+            const blob = await response.blob();
+
+            // Create a URL for the blob
+            const url = window.URL.createObjectURL(blob);
+
+            // Create a temporary anchor element to trigger the download
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'RFQ_Template.xlsx'; // Name that will appear when downloading
+            document.body.appendChild(a);
+
+            // Trigger the download
+            a.click();
+
+            // Clean up
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+
+            // Show success notification
+            showAppNotification(
+                'success',
+                'Successful!',
+                'RFQ template downloaded successfully',
+            );
         } catch (error) {
-          console.error('Error downloading the template:', error);
-          
-          // Show error notification
-          showAppNotification(
-            'error',
-            'Failed!',
-            'Failed to download the template file',
-          );
+            console.error('Error downloading the template:', error);
+
+            // Show error notification
+            showAppNotification(
+                'error',
+                'Failed!',
+                'Failed to download the template file',
+            );
         }
-      };
-    
+    };
+
 
     return (
         <>
@@ -1206,49 +1207,49 @@ export default function EstimateNew() {
                         </Group>
                         <Space h='sm' />
                         {sheetInfo && (
-          <Group gap="xs" mb="xs">
-            <Text size="sm" c="dimmed">Sheet:</Text>
-            <Badge size="sm" color="black" variant="light">{sheetInfo.sheetName}</Badge>
-            <Text size="sm" c="dimmed">Column:</Text>
-            <Badge size="sm" color="black" variant="light">{sheetInfo.columnName}</Badge>
-          </Group>
-        )}
-                <Group justify="space-between">
-                    <Group mb='xs' align="center" >
-                        <Text size="md" fw={500}>
-                            Tasks Available
-                        </Text>
-                        {
-                            validatedTasks?.length > 0 ? (
-                                <Badge ta='center' color="green" size="md" radius="lg">
-                                    {/* {validatedTasks?.filter((ele) => ele.status === true)?.length || 0} */}
-                                    {Math.round(((validatedTasks?.filter((ele) => ele.status === true)?.length / validatedTasks?.length) * 100) || 0)} %
-                                </Badge>
-                            ) : (
-                                <Badge variant="light" ta='center' color="green" size="md" radius="lg">
-                                    0
-                                </Badge>
-                            )
-                        }
-                    </Group>
-                    <Group mb='xs' align="center">
-                        <Text size="md" fw={500}>
-                            Tasks Not-Available
-                        </Text>
-                        {
-                            validatedTasks?.length > 0 ? (
-                                <Badge ta='center' color="blue" size="md" radius="lg">
-                                    {/* {validatedTasks?.filter((ele) => ele.status === false)?.length || 0} */}
-                                    {Math.round(((validatedTasks?.filter((ele) => ele.status === false)?.length / validatedTasks?.length) * 100) || 0)} %
-                                </Badge>
-                            ) : (
-                                <Badge variant="light" ta='center' color="blue" size="md" radius="lg">
-                                    0
-                                </Badge>
-                            )
-                        }
-                    </Group>
-                </Group>
+                            <Group gap="xs" mb="xs">
+                                <Text size="sm" c="dimmed">Sheet:</Text>
+                                <Badge size="sm" color="black" variant="light">{sheetInfo.sheetName}</Badge>
+                                <Text size="sm" c="dimmed">Column:</Text>
+                                <Badge size="sm" color="black" variant="light">{sheetInfo.columnName}</Badge>
+                            </Group>
+                        )}
+                        <Group justify="space-between">
+                            <Group mb='xs' align="center" >
+                                <Text size="md" fw={500}>
+                                    Tasks Available
+                                </Text>
+                                {
+                                    validatedTasks?.length > 0 ? (
+                                        <Badge ta='center' color="green" size="md" radius="lg">
+                                            {/* {validatedTasks?.filter((ele) => ele.status === true)?.length || 0} */}
+                                            {Math.round(((validatedTasks?.filter((ele) => ele.status === true)?.length / validatedTasks?.length) * 100) || 0)} %
+                                        </Badge>
+                                    ) : (
+                                        <Badge variant="light" ta='center' color="green" size="md" radius="lg">
+                                            0
+                                        </Badge>
+                                    )
+                                }
+                            </Group>
+                            <Group mb='xs' align="center">
+                                <Text size="md" fw={500}>
+                                    Tasks Not-Available
+                                </Text>
+                                {
+                                    validatedTasks?.length > 0 ? (
+                                        <Badge ta='center' color="blue" size="md" radius="lg">
+                                            {/* {validatedTasks?.filter((ele) => ele.status === false)?.length || 0} */}
+                                            {Math.round(((validatedTasks?.filter((ele) => ele.status === false)?.length / validatedTasks?.length) * 100) || 0)} %
+                                        </Badge>
+                                    ) : (
+                                        <Badge variant="light" ta='center' color="blue" size="md" radius="lg">
+                                            0
+                                        </Badge>
+                                    )
+                                }
+                            </Group>
+                        </Group>
                     </>
                 }
                 scrollAreaComponent={ScrollArea.Autosize}
@@ -1279,7 +1280,7 @@ export default function EstimateNew() {
                                     }
                                 </Group>
                             </Group> */}
-                            
+
                 {/* <ScrollArea
                                 style={{
                                     flex: 1, // Take remaining space for scrollable area
@@ -1482,45 +1483,45 @@ export default function EstimateNew() {
                         {/* <Space h='xs'/> */}
                         <Card withBorder h='60vh' radius='md'>
                             <Group justify="space-between">
-                            <Text size="md" fw={500} >
+                                <Text size="md" fw={500} >
                                     Select Document
                                 </Text>
 
                                 <Group>
-                                <Tooltip label='Download RFQ Template Example'>
-                                <ActionIcon
-                                color="green"
-                                variant="light"
-                                onClick={downloadEmptyExcel}
-                                >
-                                    <IconFileDownload/>
-                                </ActionIcon>
-                                </Tooltip>
+                                    <Tooltip label='Download RFQ Template Example'>
+                                        <ActionIcon
+                                            color="green"
+                                            variant="light"
+                                            onClick={downloadEmptyExcel}
+                                        >
+                                            <IconFileDownload />
+                                        </ActionIcon>
+                                    </Tooltip>
                                     {/* {
                                     selectedFile && ( */}
-                                <Tooltip label={selectedFile ? "Show Tasks for Selected file" : "Select file for Tasks"}>
-                                    <Button
-                                        size='xs'
-                                        color="#000480"
-                                        radius='lg'
-                                        variant="light"
-                                        disabled={!selectedFile}
-                                        onClick={() => {
-                                            setSelectedEstimateId(selectedFile?.name);
-                                            setSelectedFileTasksOpened(true);
-                                        }}
-                                        rightSection={<IconListCheck size={20} />}
-                                    >
-                                        Show Tasks
-                                    </Button>
-                                </Tooltip>
-                                {/* )
+                                    <Tooltip label={selectedFile ? "Show Tasks for Selected file" : "Select file for Tasks"}>
+                                        <Button
+                                            size='xs'
+                                            color="#000480"
+                                            radius='lg'
+                                            variant="light"
+                                            disabled={!selectedFile}
+                                            onClick={() => {
+                                                setSelectedEstimateId(selectedFile?.name);
+                                                setSelectedFileTasksOpened(true);
+                                            }}
+                                            rightSection={<IconListCheck size={20} />}
+                                        >
+                                            Show Tasks
+                                        </Button>
+                                    </Tooltip>
+                                    {/* )
                                 } */}
 
-                                
+
 
                                 </Group>
-                                
+
 
                             </Group>
 
@@ -1534,13 +1535,13 @@ export default function EstimateNew() {
                                 scrollHideDelay={1}
                                 scrollbarSize={5}
                             >
-                               <RFQUploadDropZoneExcel
+                                <RFQUploadDropZoneExcel
                                     name="Excel or CSV file"
                                     changeHandler={handleFileChange}
                                     selectedFile={selectedFile}
                                     setSelectedFile={setSelectedFile}
                                     color="green"
-                                    />
+                                />
                                 <Space h='sm' />
                                 <Group justify="space-between" pb='sm'>
                                     <Text size="md" fw={500} >
@@ -1724,10 +1725,10 @@ export default function EstimateNew() {
                                 </Group>
                             </Group>
                             {/* </Card> */}
-                            
+
 
                             {expanded && (
-                                <ScrollArea scrollbarSize={0} offsetScrollbars scrollHideDelay={1} style={{ height: "60vh"}}>
+                                <ScrollArea scrollbarSize={0} offsetScrollbars scrollHideDelay={1} style={{ height: "60vh" }}>
                                     <SimpleGrid cols={1} spacing="xs" >
                                         {fields.map((field) => (
                                             <Grid key={field.name} align="center">
@@ -1811,11 +1812,11 @@ export default function EstimateNew() {
                                 {
                                     showFields?.length > 0 ? (
                                         <>
-                                        <Text size="md" m='sm' fw={500}>
-                                    Optional Parameters
-                                </Text>
-                                {/* <Space h='sm'/> */}
-                                </>
+                                            <Text size="md" m='sm' fw={500}>
+                                                Optional Parameters
+                                            </Text>
+                                            {/* <Space h='sm'/> */}
+                                        </>
                                     ) : (
                                         <></>
                                     )
@@ -2333,7 +2334,7 @@ border-bottom: none;
                                                     </ActionIcon>
                                                 </Tooltip>
                                                 <Tooltip label="Remarks!">
-                                                {/* <Indicator 
+                                                    {/* <Indicator 
                                                 label={val?.data?.remarks?.length || 0} 
                                                 disabled={val?.data?.remarks?.length === 0} 
                                                 color="red" 
@@ -2438,45 +2439,93 @@ border-bottom: none;
                                         </Group>
 
                                         <Space h='sm' />
+                                        {
+                                            <Group mb="md">
 
-                                        <OverallEstimateReport
-                                         totalTATTime={estimateReportData?.overallEstimateReport?.estimatedTatTime || 0}
-                                            estimatedManHrs={estimateReportData?.overallEstimateReport?.estimateManhrs || {}}
-                                            estimatedSparesCost={estimateReportData?.overallEstimateReport?.estimatedSpareCost || 0}
-                                            cappingUnbilledCost={0}
-                                            parts={
-                                                estimateReportData?.overallEstimateReport?.spareParts || []
-                                            //     [
-                                            //       { partDesc: "Bolt", partName: "M12 Bolt", qty: 4.0, price: 10.00, unit: "" },
-                                            //       { partDesc: "Screw", partName: "Wood Screw", qty: 2.0, price: 5.00, unit: "" },
-                                            //     ]
+                                                <SegmentedControl
+                                                    color="blue"
+                                                    bg='white'
+                                                    value={tabValue}
+                                                    onChange={setTabValue}
+                                                    data={[
+                                                        { label: 'Overall Est', value: 'overall' },
+                                                        { label: 'Findings', value: 'finding' },
+                                                        { label: 'MPD', value: 'mpd' },
+                                                    ]} />
+                                                <Title order={4} fw={500} c="dimmed">
+                                                    {
+                                                        tabValue === 'overall' ? ("Overall Estimate Report")
+                                                            : tabValue === 'finding' ? ("Findings Report")
+                                                                : ("MPD Report")
+                                                    }
+                                                    {/* Overall Estimate Report */}
+                                                </Title>
+                                            </Group>
                                         }
-                                            spareCostData={[
-                                                { date: "Min", Cost: Math.round(estimateReportData?.overallEstimateReport?.estimatedSpareCost * 0.85) },
-                                                { date: "Estimated", Cost: Math.round(estimateReportData?.overallEstimateReport?.estimatedSpareCost) },
-                                                { date: "Max", Cost: Math.round(estimateReportData?.overallEstimateReport?.estimatedSpareCost * 1.10) },
-                                            ]}
-                                            // totalTATTime={44}
-                                            // estimatedManHrs={{ min: 40, estimated: 66, max: 46, capping: 46 }}
-                                            // cappingUnbilledCost={44}
-                                            // parts={[
-                                            //     { partDesc: "Bolt", partName: "M12 Bolt", qty: 4.0, price: 10.00, unit: "" },
-                                            //     { partDesc: "Screw", partName: "Wood Screw", qty: 2.0, price: 5.00, unit: "" },
-                                            // ]}
-                                            // estimatedSparesCost={44}
-                                            // spareCostData={[
-                                            //     { date: "Min", Cost: 100 },
-                                            //     { date: "Estimated", Cost: 800 },
-                                            //     { date: "Max", Cost: 1000 },
-                                            // ]}
-                                        />
-                                        <Space h='xl' />
-
-                                        {/* <FindingsWiseSection tasks={jsonData?.tasks} findings={jsonData.findings} /> */}
-                                        <FindingsWiseSection tasks={estimateReportData?.tasks} findings={estimateReportData?.findings} />
+                                        {
+                                            tabValue === 'overall' ? (
+                                                <>
+                                                    <OverallEstimateReport
+                                                        totalTATTime={estimateReportData?.overallEstimateReport?.estimatedTatTime || 0}
+                                                        estimatedManHrs={estimateReportData?.overallEstimateReport?.estimateManhrs || {}}
+                                                        estimatedSparesCost={estimateReportData?.overallEstimateReport?.estimatedSpareCost || 0}
+                                                        cappingUnbilledCost={0}
+                                                        parts={
+                                                            estimateReportData?.overallEstimateReport?.spareParts || []
+                                                            //     [
+                                                            //       { partDesc: "Bolt", partName: "M12 Bolt", qty: 4.0, price: 10.00, unit: "" },
+                                                            //       { partDesc: "Screw", partName: "Wood Screw", qty: 2.0, price: 5.00, unit: "" },
+                                                            //     ]
+                                                        }
+                                                        spareCostData={[
+                                                            { date: "Min", Cost: Math.round(estimateReportData?.overallEstimateReport?.estimatedSpareCost * 0.85) },
+                                                            { date: "Estimated", Cost: Math.round(estimateReportData?.overallEstimateReport?.estimatedSpareCost) },
+                                                            { date: "Max", Cost: Math.round(estimateReportData?.overallEstimateReport?.estimatedSpareCost * 1.10) },
+                                                        ]}
+                                                    />
+                                                </>
+                                            )
+                                                : tabValue === 'finding' ? (
+                                                    <>
+                                                    <OverallFindingsReport
+                                                        totalTATTime={estimateReportData?.aggregatedFindings?.estimatedTatTime || 0}
+                                                        estimatedManHrs={estimateReportData?.aggregatedFindings?.estimateManhrs || {}}
+                                                        estimatedSparesCost={estimateReportData?.aggregatedFindings?.estimatedSpareCost || 0}
+                                                        cappingUnbilledCost={0}
+                                                        parts={
+                                                            estimateReportData?.aggregatedFindings?.spareParts || []
+                                                        }
+                                                        spareCostData={[
+                                                            { date: "Min", Cost: Math.round(estimateReportData?.aggregatedFindings?.estimatedSpareCost * 0.85) },
+                                                            { date: "Estimated", Cost: Math.round(estimateReportData?.aggregatedFindings?.estimatedSpareCost) },
+                                                            { date: "Max", Cost: Math.round(estimateReportData?.aggregatedFindings?.estimatedSpareCost * 1.10) },
+                                                        ]}
+                                                    />
+                                                    </>
+                                                )
+                                                    : (
+                                                        <>
+                                                        <OverallMPDReport
+                                                        totalTATTime={estimateReportData?.aggregatedTasks?.estimatedTatTime || 0}
+                                                        estimatedManHrs={estimateReportData?.aggregatedTasks?.estimateManhrs || {}}
+                                                        estimatedSparesCost={estimateReportData?.aggregatedTasks?.estimatedSpareCost || 0}
+                                                        cappingUnbilledCost={0}
+                                                        parts={
+                                                            estimateReportData?.aggregatedTasks?.spareParts || []
+                                                        }
+                                                        spareCostData={[
+                                                            { date: "Min", Cost: Math.round(estimateReportData?.aggregatedTasks?.estimatedSpareCost * 0.85) },
+                                                            { date: "Estimated", Cost: Math.round(estimateReportData?.aggregatedTasks?.estimatedSpareCost) },
+                                                            { date: "Max", Cost: Math.round(estimateReportData?.aggregatedTasks?.estimatedSpareCost * 1.10) },
+                                                        ]}
+                                                    />
+                                                        </>
+                                                    )
+                                        }
 
                                         <Space h='md' />
-                                        {/* <PreloadWiseSection tasks={jsonData?.tasks} /> */}
+                                        <FindingsWiseSection tasks={estimateReportData?.tasks} findings={estimateReportData?.findings} />
+                                        <Space h='md' />
                                         <PreloadWiseSection tasks={estimateReportData?.tasks} />
                                     </>
                                 ) : (
@@ -2570,102 +2619,102 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
     parts,
     estimatedSparesCost,
     spareCostData,
-  }: any) => {
+}: any) => {
     return (
-      <Box>
-        <Title order={4} mb="md" fw={500} c="dimmed">Overall Estimate Report</Title>
-        <Grid gutter="xs">
-          {/* Left Section - Estimate Overview */}
-          <Grid.Col span={3}>
-            <Card withBorder radius="md" p="xs" h="100%">
-              {/* <Title order={5} mb="md" fw={500} c="dimmed">Estimate Overview</Title> */}
-              
-              {/* Estimated Man Hours */}
-              <Card withBorder radius="md" p="md" mb="md" bg="gray.0">
-                <Text size="sm" fw={500} c="dimmed" mb="md">
-                  Estimated Man Hours
-                </Text>
-                <Flex gap="md" direction="column">
-                  {Object.entries(estimatedManHrs || {}).map(([key, value]: any) => {
-                    // Determine color based on key
-                    const color = key === "min" ? "teal.6" : 
-                                  key === "max" ? "blue.6" :
-                                  key === "avg" ? "teal.6" : 
-                                  "green.6";
-                    
-                    // Format the label
-                    const label = key.charAt(0).toUpperCase() + key.slice(1);
-                    
-                    return (
-                      <Box key={key}>
-                        <Group justify="apart" mb={5}>
-                          <Text fz="xs" fw={500}>{label}</Text>
-                          <Text fz="sm" fw={600} c={color}>
-                            {typeof value === 'number' ? value.toFixed(0) : value} Hrs
-                          </Text>
-                        </Group>
-                        <Progress 
-                          color={color}
-                          value={typeof value === 'number' ? Math.min(value / 100, 100) : 0} 
-                          size="md"
-                          radius="sm"
-                        />
-                      </Box>
-                    );
-                  })}
-                </Flex>
-              </Card>
-  
-              {/* Unbillable Cost */}
-              <Card withBorder radius="md" p="xs" mb="md" bg="blue.0">
-                <Group gap="md">
-                  <ThemeIcon variant="light" radius="md" size={50} color="blue.6">
-                    <IconSettingsDollar size={24} />
-                  </ThemeIcon>
-                  <Flex direction="column">
-                    <Text size="sm" fw={500} c="dimmed">
-                      Unbillable Cost
-                    </Text>
-                    <Text size="xl" fw={700} c="blue.6">
-                      ${cappingUnbilledCost || 0}
-                    </Text>
-                  </Flex>
-                </Group>
-              </Card>
-  
-              {/* Estimated Spares Cost */}
-              <Card withBorder radius="md" p="xs" bg="blue.0">
-                <Group  gap="md">
-                  <ThemeIcon variant="light" radius="md" size={50} color="blue.6">
-                    <MdOutlineMiscellaneousServices size={24} />
-                  </ThemeIcon>
-                  <Flex direction="column">
-                    <Text size="sm" fw={500} c="dimmed">
-                      Estimated Spares Cost
-                    </Text>
-                    <Text size="xl" fw={700} c="blue.6">
-                      ${estimatedSparesCost?.toFixed(2) || 0}
-                    </Text>
-                  </Flex>
-                </Group>
-              </Card>
-            </Card>
-          </Grid.Col>
-  
-          {/* Center Section - Parts Table (6 columns width) */}
-          <Grid.Col span={6}>
-            <Card withBorder radius="md" p="md" h="100%" style={{ display: 'flex', flexDirection: 'column' }}>
-              <Title order={5} mb="md" fw={500} c="dimmed">Estimated Parts</Title>
-              <Box style={{ flex: 1, height: '500px' }}>
-                <div
-                  className="ag-theme-alpine"
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                  }}
-                >
-                  <style>
-                    {`
+        <Box>
+            {/* <Title order={4} mb="md" fw={500} c="dimmed">Overall Estimate Report</Title> */}
+            <Grid gutter="xs">
+                {/* Left Section - Estimate Overview */}
+                <Grid.Col span={3}>
+                    <Card withBorder radius="md" p="xs" h="100%">
+                        {/* <Title order={5} mb="md" fw={500} c="dimmed">Estimate Overview</Title> */}
+
+                        {/* Estimated Man Hours */}
+                        <Card withBorder radius="md" p="md" mb="md" bg="gray.0">
+                            <Text size="sm" fw={500} c="dimmed" mb="md">
+                                Estimated Man Hours
+                            </Text>
+                            <Flex gap="md" direction="column">
+                                {Object.entries(estimatedManHrs || {}).map(([key, value]: any) => {
+                                    // Determine color based on key
+                                    const color = key === "min" ? "teal.6" :
+                                        key === "max" ? "blue.6" :
+                                            key === "avg" ? "teal.6" :
+                                                "green.6";
+
+                                    // Format the label
+                                    const label = key.charAt(0).toUpperCase() + key.slice(1);
+
+                                    return (
+                                        <Box key={key}>
+                                            <Group justify="apart" mb={5}>
+                                                <Text fz="xs" fw={500}>{label}</Text>
+                                                <Text fz="sm" fw={600} c={color}>
+                                                    {typeof value === 'number' ? value.toFixed(0) : value} Hrs
+                                                </Text>
+                                            </Group>
+                                            <Progress
+                                                color={color}
+                                                value={typeof value === 'number' ? Math.min(value / 100, 100) : 0}
+                                                size="md"
+                                                radius="sm"
+                                            />
+                                        </Box>
+                                    );
+                                })}
+                            </Flex>
+                        </Card>
+
+                        {/* Unbillable Cost */}
+                        <Card withBorder radius="md" p="xs" mb="md" bg="blue.0">
+                            <Group gap="md">
+                                <ThemeIcon variant="light" radius="md" size={50} color="blue.6">
+                                    <IconSettingsDollar size={24} />
+                                </ThemeIcon>
+                                <Flex direction="column">
+                                    <Text size="sm" fw={500} c="dimmed">
+                                        Unbillable Cost
+                                    </Text>
+                                    <Text size="xl" fw={700} c="blue.6">
+                                        ${cappingUnbilledCost || 0}
+                                    </Text>
+                                </Flex>
+                            </Group>
+                        </Card>
+
+                        {/* Estimated Spares Cost */}
+                        <Card withBorder radius="md" p="xs" bg="blue.0">
+                            <Group gap="md">
+                                <ThemeIcon variant="light" radius="md" size={50} color="blue.6">
+                                    <MdOutlineMiscellaneousServices size={24} />
+                                </ThemeIcon>
+                                <Flex direction="column">
+                                    <Text size="sm" fw={500} c="dimmed">
+                                        Estimated Spares Cost
+                                    </Text>
+                                    <Text size="xl" fw={700} c="blue.6">
+                                        ${estimatedSparesCost?.toFixed(2) || 0}
+                                    </Text>
+                                </Flex>
+                            </Group>
+                        </Card>
+                    </Card>
+                </Grid.Col>
+
+                {/* Center Section - Parts Table (6 columns width) */}
+                <Grid.Col span={6}>
+                    <Card withBorder radius="md" p="md" h="100%" style={{ display: 'flex', flexDirection: 'column' }}>
+                        <Title order={5} mb="md" fw={500} c="dimmed">Estimated Parts</Title>
+                        <Box style={{ flex: 1, height: '500px' }}>
+                            <div
+                                className="ag-theme-alpine"
+                                style={{
+                                    width: "100%",
+                                    height: "100%",
+                                }}
+                            >
+                                <style>
+                                    {`
                       .ag-theme-alpine {
                         --ag-header-background-color: #f8f9fa;
                         --ag-odd-row-background-color: #ffffff;
@@ -2688,123 +2737,600 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
                         padding: 8px;
                       }
                     `}
-                  </style>
-                  <AgGridReact
-                    rowData={parts || []}
-                    domLayout="normal"
-                    // defaultColDef={{
-                    //   sortable: true,
-                    //   resizable: true,
-                    //   filter: true,
-                    //   floatingFilter: true,
+                                </style>
+                                <AgGridReact
+                                    rowData={parts || []}
+                                    domLayout="normal"
+                                    // defaultColDef={{
+                                    //   sortable: true,
+                                    //   resizable: true,
+                                    //   filter: true,
+                                    //   floatingFilter: true,
 
-                    // }}
-                    columnDefs={[
-                      {
-                        field: "partId",
-                        headerName: "Part Number",
-                        flex: 1.5,
-                        minWidth: 120,
-                        sortable: true,
-                        resizable: true,
-                        filter: true,
-                        floatingFilter: true,
-                      },
-                      {
-                        field: "desc",
-                        headerName: "Description",
-                        flex: 1.5,
-                        minWidth: 120,
-                        sortable: true,
-                        resizable: true,
-                        filter: true,
-                        floatingFilter: true,
-                      },
-                      {
-                        field: "qty",
-                        headerName: "Qty",
-                        flex: 0.8,
-                        minWidth: 80,
-                        filter: 'agNumberColumnFilter',
-                      },
-                      {
-                        field: "unit",
-                        headerName: "Units",
-                        flex: 0.8,
-                        minWidth: 80,
-                      },
-                      {
-                        field: "price",
-                        headerName: "Price ($)",
-                        flex: 1,
-                        minWidth: 90,
-                        filter: 'agNumberColumnFilter',
-                        valueFormatter: params => {
-                          if (params.value === null || params.value === undefined) return '';
-                          return `$${parseFloat(params.value).toFixed(2)}`;
-                        },
-                      },
-                    ]}
-                    pagination={true}
-                    paginationPageSize={10}
-                  />
-                </div>
-              </Box>
-            </Card>
-          </Grid.Col>
-  
-          {/* Right Section - Chart (3 columns width) */}
-          <Grid.Col span={3}>
-            <Card withBorder radius="md" p="xs" h="100%">
-              <Title order={5} mb="md" fw={500} c="dimmed">Spare Cost Analysis</Title>
-              
-              <Card withBorder radius="md" p="md" bg="blue.0">
-                {/* <Text size="sm" fw={500} c="dimmed" mb="md">
+                                    // }}
+                                    columnDefs={[
+                                        {
+                                            field: "partId",
+                                            headerName: "Part Number",
+                                            flex: 1.5,
+                                            minWidth: 120,
+                                            sortable: true,
+                                            resizable: true,
+                                            filter: true,
+                                            floatingFilter: true,
+                                        },
+                                        {
+                                            field: "desc",
+                                            headerName: "Description",
+                                            flex: 1.5,
+                                            minWidth: 120,
+                                            sortable: true,
+                                            resizable: true,
+                                            filter: true,
+                                            floatingFilter: true,
+                                        },
+                                        {
+                                            field: "qty",
+                                            headerName: "Qty",
+                                            flex: 0.8,
+                                            minWidth: 80,
+                                            filter: 'agNumberColumnFilter',
+                                        },
+                                        {
+                                            field: "unit",
+                                            headerName: "Units",
+                                            flex: 0.8,
+                                            minWidth: 80,
+                                        },
+                                        {
+                                            field: "price",
+                                            headerName: "Price ($)",
+                                            flex: 1,
+                                            minWidth: 90,
+                                            filter: 'agNumberColumnFilter',
+                                            valueFormatter: params => {
+                                                if (params.value === null || params.value === undefined) return '';
+                                                return `$${parseFloat(params.value).toFixed(2)}`;
+                                            },
+                                        },
+                                    ]}
+                                    pagination={true}
+                                    paginationPageSize={10}
+                                />
+                            </div>
+                        </Box>
+                    </Card>
+                </Grid.Col>
+
+                {/* Right Section - Chart (3 columns width) */}
+                <Grid.Col span={3}>
+                    <Card withBorder radius="md" p="xs" h="100%">
+                        <Title order={5} mb="md" fw={500} c="dimmed">Spare Cost Analysis</Title>
+
+                        <Card withBorder radius="md" p="md" bg="blue.0">
+                            {/* <Text size="sm" fw={500} c="dimmed" mb="md">
                   Spare Cost Trend
                 </Text> */}
-                <AreaChart
-                  h={350}
-                  data={spareCostData || [
-                    { date: 'Min', Cost: 100 },
-                    { date: 'Estimated', Cost: 750 },
-                    { date: 'Max', Cost: 1000 }
-                  ]}
-                  dataKey="date"
-                  series={[{ name: "Cost", color: "blue.9" }]}
-                  curveType="monotone"
-                  withGradient
-                  connectNulls
-                  gridAxis="y"
-                  withLegend={false}
-                  tooltipProps={{
-                    content: ({ payload, label }) => {
-                      if (payload && payload.length > 0) {
-                        return (
-                          <Card p="xs" withBorder>
-                            <Text fw={500} size="sm">{label}</Text>
-                            <Text size="sm">${payload[0].value}</Text>
-                          </Card>
-                        );
-                      }
-                      return null;
-                    }
-                  }}
-                  yAxisProps={{
-                    tickFormatter: (value) => `$${value}`,
-                    domain: ['dataMin - 10', 'dataMax + 10']
-                  }}
-                />
-              </Card>
-            </Card>
-          </Grid.Col>
-        </Grid>
-      </Box>
+                            <AreaChart
+                                h={350}
+                                data={spareCostData || [
+                                    { date: 'Min', Cost: 100 },
+                                    { date: 'Estimated', Cost: 750 },
+                                    { date: 'Max', Cost: 1000 }
+                                ]}
+                                dataKey="date"
+                                series={[{ name: "Cost", color: "blue.9" }]}
+                                curveType="monotone"
+                                withGradient
+                                connectNulls
+                                gridAxis="y"
+                                withLegend={false}
+                                tooltipProps={{
+                                    content: ({ payload, label }) => {
+                                        if (payload && payload.length > 0) {
+                                            return (
+                                                <Card p="xs" withBorder>
+                                                    <Text fw={500} size="sm">{label}</Text>
+                                                    <Text size="sm">${payload[0].value}</Text>
+                                                </Card>
+                                            );
+                                        }
+                                        return null;
+                                    }
+                                }}
+                                yAxisProps={{
+                                    tickFormatter: (value) => `$${value}`,
+                                    domain: ['dataMin - 10', 'dataMax + 10']
+                                }}
+                            />
+                        </Card>
+                    </Card>
+                </Grid.Col>
+            </Grid>
+        </Box>
     );
-  };
-  
-  
+};
 
-  const FindingsWiseSection: React.FC<FindingsWiseSectionProps> = ({ findings }) => {
+const OverallFindingsReport: React.FC<TATDashboardProps> = ({
+    totalTATTime,
+    estimatedManHrs,
+    cappingUnbilledCost,
+    parts,
+    estimatedSparesCost,
+    spareCostData,
+}: any) => {
+    return (
+        <Box>
+            {/* <Title order={4} mb="md" fw={500} c="dimmed">Overall Estimate Report</Title> */}
+            <Grid gutter="xs">
+                {/* Left Section - Estimate Overview */}
+                <Grid.Col span={3}>
+                    <Card withBorder radius="md" p="xs" h="100%">
+                        {/* <Title order={5} mb="md" fw={500} c="dimmed">Estimate Overview</Title> */}
+
+                        {/* Estimated Man Hours */}
+                        <Card withBorder radius="md" p="md" mb="md" bg="gray.0">
+                            <Text size="sm" fw={500} c="dimmed" mb="md">
+                                Estimated Man Hours
+                            </Text>
+                            <Flex gap="md" direction="column">
+                                {Object.entries(estimatedManHrs || {}).map(([key, value]: any) => {
+                                    // Determine color based on key
+                                    const color = key === "min" ? "teal.6" :
+                                        key === "max" ? "blue.6" :
+                                            key === "avg" ? "teal.6" :
+                                                "green.6";
+
+                                    // Format the label
+                                    const label = key.charAt(0).toUpperCase() + key.slice(1);
+
+                                    return (
+                                        <Box key={key}>
+                                            <Group justify="apart" mb={5}>
+                                                <Text fz="xs" fw={500}>{label}</Text>
+                                                <Text fz="sm" fw={600} c={color}>
+                                                    {typeof value === 'number' ? value.toFixed(0) : value} Hrs
+                                                </Text>
+                                            </Group>
+                                            <Progress
+                                                color={color}
+                                                value={typeof value === 'number' ? Math.min(value / 100, 100) : 0}
+                                                size="md"
+                                                radius="sm"
+                                            />
+                                        </Box>
+                                    );
+                                })}
+                            </Flex>
+                        </Card>
+
+                        {/* Unbillable Cost */}
+                        <Card withBorder radius="md" p="xs" mb="md" bg="blue.0">
+                            <Group gap="md">
+                                <ThemeIcon variant="light" radius="md" size={50} color="blue.6">
+                                    <IconSettingsDollar size={24} />
+                                </ThemeIcon>
+                                <Flex direction="column">
+                                    <Text size="sm" fw={500} c="dimmed">
+                                        Unbillable Cost
+                                    </Text>
+                                    <Text size="xl" fw={700} c="blue.6">
+                                        ${cappingUnbilledCost || 0}
+                                    </Text>
+                                </Flex>
+                            </Group>
+                        </Card>
+
+                        {/* Estimated Spares Cost */}
+                        <Card withBorder radius="md" p="xs" bg="blue.0">
+                            <Group gap="md">
+                                <ThemeIcon variant="light" radius="md" size={50} color="blue.6">
+                                    <MdOutlineMiscellaneousServices size={24} />
+                                </ThemeIcon>
+                                <Flex direction="column">
+                                    <Text size="sm" fw={500} c="dimmed">
+                                        Estimated Spares Cost
+                                    </Text>
+                                    <Text size="xl" fw={700} c="blue.6">
+                                        ${estimatedSparesCost?.toFixed(2) || 0}
+                                    </Text>
+                                </Flex>
+                            </Group>
+                        </Card>
+                    </Card>
+                </Grid.Col>
+
+                {/* Center Section - Parts Table (6 columns width) */}
+                <Grid.Col span={6}>
+                    <Card withBorder radius="md" p="md" h="100%" style={{ display: 'flex', flexDirection: 'column' }}>
+                        <Title order={5} mb="md" fw={500} c="dimmed">Estimated Parts</Title>
+                        <Box style={{ flex: 1, height: '500px' }}>
+                            <div
+                                className="ag-theme-alpine"
+                                style={{
+                                    width: "100%",
+                                    height: "100%",
+                                }}
+                            >
+                                <style>
+                                    {`
+                      .ag-theme-alpine {
+                        --ag-header-background-color: #f8f9fa;
+                        --ag-odd-row-background-color: #ffffff;
+                        --ag-even-row-background-color: #f9f9f9;
+                        --ag-row-hover-color: #f1f3f5;
+                        --ag-border-color: #e9ecef;
+                        --ag-font-size: 13px;
+                      }
+                      
+                      .ag-theme-alpine .ag-header-cell {
+                        font-weight: 600;
+                        color: #495057;
+                      }
+                      
+                      .ag-theme-alpine .ag-row {
+                        border-bottom: 1px solid var(--ag-border-color);
+                      }
+  
+                      .ag-theme-alpine .ag-cell {
+                        padding: 8px;
+                      }
+                    `}
+                                </style>
+                                <AgGridReact
+                                    rowData={parts || []}
+                                    domLayout="normal"
+                                    // defaultColDef={{
+                                    //   sortable: true,
+                                    //   resizable: true,
+                                    //   filter: true,
+                                    //   floatingFilter: true,
+
+                                    // }}
+                                    columnDefs={[
+                                        {
+                                            field: "partId",
+                                            headerName: "Part Number",
+                                            flex: 1.5,
+                                            minWidth: 120,
+                                            sortable: true,
+                                            resizable: true,
+                                            filter: true,
+                                            floatingFilter: true,
+                                        },
+                                        {
+                                            field: "desc",
+                                            headerName: "Description",
+                                            flex: 1.5,
+                                            minWidth: 120,
+                                            sortable: true,
+                                            resizable: true,
+                                            filter: true,
+                                            floatingFilter: true,
+                                        },
+                                        {
+                                            field: "qty",
+                                            headerName: "Qty",
+                                            flex: 0.8,
+                                            minWidth: 80,
+                                            filter: 'agNumberColumnFilter',
+                                        },
+                                        {
+                                            field: "unit",
+                                            headerName: "Units",
+                                            flex: 0.8,
+                                            minWidth: 80,
+                                        },
+                                        {
+                                            field: "price",
+                                            headerName: "Price ($)",
+                                            flex: 1,
+                                            minWidth: 90,
+                                            filter: 'agNumberColumnFilter',
+                                            valueFormatter: params => {
+                                                if (params.value === null || params.value === undefined) return '';
+                                                return `$${parseFloat(params.value).toFixed(2)}`;
+                                            },
+                                        },
+                                    ]}
+                                    pagination={true}
+                                    paginationPageSize={10}
+                                />
+                            </div>
+                        </Box>
+                    </Card>
+                </Grid.Col>
+
+                {/* Right Section - Chart (3 columns width) */}
+                <Grid.Col span={3}>
+                    <Card withBorder radius="md" p="xs" h="100%">
+                        <Title order={5} mb="md" fw={500} c="dimmed">Spare Cost Analysis</Title>
+
+                        <Card withBorder radius="md" p="md" bg="blue.0">
+                            {/* <Text size="sm" fw={500} c="dimmed" mb="md">
+                  Spare Cost Trend
+                </Text> */}
+                            <AreaChart
+                                h={350}
+                                data={spareCostData || [
+                                    { date: 'Min', Cost: 100 },
+                                    { date: 'Estimated', Cost: 750 },
+                                    { date: 'Max', Cost: 1000 }
+                                ]}
+                                dataKey="date"
+                                series={[{ name: "Cost", color: "blue.9" }]}
+                                curveType="monotone"
+                                withGradient
+                                connectNulls
+                                gridAxis="y"
+                                withLegend={false}
+                                tooltipProps={{
+                                    content: ({ payload, label }) => {
+                                        if (payload && payload.length > 0) {
+                                            return (
+                                                <Card p="xs" withBorder>
+                                                    <Text fw={500} size="sm">{label}</Text>
+                                                    <Text size="sm">${payload[0].value}</Text>
+                                                </Card>
+                                            );
+                                        }
+                                        return null;
+                                    }
+                                }}
+                                yAxisProps={{
+                                    tickFormatter: (value) => `$${value}`,
+                                    domain: ['dataMin - 10', 'dataMax + 10']
+                                }}
+                            />
+                        </Card>
+                    </Card>
+                </Grid.Col>
+            </Grid>
+        </Box>
+    );
+};
+
+const OverallMPDReport: React.FC<TATDashboardProps> = ({
+    totalTATTime,
+    estimatedManHrs,
+    cappingUnbilledCost,
+    parts,
+    estimatedSparesCost,
+    spareCostData,
+}: any) => {
+    return (
+        <Box>
+            {/* <Title order={4} mb="md" fw={500} c="dimmed">Overall Estimate Report</Title> */}
+            <Grid gutter="xs">
+                {/* Left Section - Estimate Overview */}
+                <Grid.Col span={3}>
+                    <Card withBorder radius="md" p="xs" h="100%">
+                        {/* <Title order={5} mb="md" fw={500} c="dimmed">Estimate Overview</Title> */}
+
+                        {/* Estimated Man Hours */}
+                        <Card withBorder radius="md" p="md" mb="md" bg="gray.0">
+                            <Text size="sm" fw={500} c="dimmed" mb="md">
+                                Estimated Man Hours
+                            </Text>
+                            <Flex gap="md" direction="column">
+                                {Object.entries(estimatedManHrs || {}).map(([key, value]: any) => {
+                                    // Determine color based on key
+                                    const color = key === "min" ? "teal.6" :
+                                        key === "max" ? "blue.6" :
+                                            key === "avg" ? "teal.6" :
+                                                "green.6";
+
+                                    // Format the label
+                                    const label = key.charAt(0).toUpperCase() + key.slice(1);
+
+                                    return (
+                                        <Box key={key}>
+                                            <Group justify="apart" mb={5}>
+                                                <Text fz="xs" fw={500}>{label}</Text>
+                                                <Text fz="sm" fw={600} c={color}>
+                                                    {typeof value === 'number' ? value.toFixed(0) : value} Hrs
+                                                </Text>
+                                            </Group>
+                                            <Progress
+                                                color={color}
+                                                value={typeof value === 'number' ? Math.min(value / 100, 100) : 0}
+                                                size="md"
+                                                radius="sm"
+                                            />
+                                        </Box>
+                                    );
+                                })}
+                            </Flex>
+                        </Card>
+
+                        {/* Unbillable Cost */}
+                        <Card withBorder radius="md" p="xs" mb="md" bg="blue.0">
+                            <Group gap="md">
+                                <ThemeIcon variant="light" radius="md" size={50} color="blue.6">
+                                    <IconSettingsDollar size={24} />
+                                </ThemeIcon>
+                                <Flex direction="column">
+                                    <Text size="sm" fw={500} c="dimmed">
+                                        Unbillable Cost
+                                    </Text>
+                                    <Text size="xl" fw={700} c="blue.6">
+                                        ${cappingUnbilledCost || 0}
+                                    </Text>
+                                </Flex>
+                            </Group>
+                        </Card>
+
+                        {/* Estimated Spares Cost */}
+                        <Card withBorder radius="md" p="xs" bg="blue.0">
+                            <Group gap="md">
+                                <ThemeIcon variant="light" radius="md" size={50} color="blue.6">
+                                    <MdOutlineMiscellaneousServices size={24} />
+                                </ThemeIcon>
+                                <Flex direction="column">
+                                    <Text size="sm" fw={500} c="dimmed">
+                                        Estimated Spares Cost
+                                    </Text>
+                                    <Text size="xl" fw={700} c="blue.6">
+                                        ${estimatedSparesCost?.toFixed(2) || 0}
+                                    </Text>
+                                </Flex>
+                            </Group>
+                        </Card>
+                    </Card>
+                </Grid.Col>
+
+                {/* Center Section - Parts Table (6 columns width) */}
+                <Grid.Col span={6}>
+                    <Card withBorder radius="md" p="md" h="100%" style={{ display: 'flex', flexDirection: 'column' }}>
+                        <Title order={5} mb="md" fw={500} c="dimmed">Estimated Parts</Title>
+                        <Box style={{ flex: 1, height: '500px' }}>
+                            <div
+                                className="ag-theme-alpine"
+                                style={{
+                                    width: "100%",
+                                    height: "100%",
+                                }}
+                            >
+                                <style>
+                                    {`
+                      .ag-theme-alpine {
+                        --ag-header-background-color: #f8f9fa;
+                        --ag-odd-row-background-color: #ffffff;
+                        --ag-even-row-background-color: #f9f9f9;
+                        --ag-row-hover-color: #f1f3f5;
+                        --ag-border-color: #e9ecef;
+                        --ag-font-size: 13px;
+                      }
+                      
+                      .ag-theme-alpine .ag-header-cell {
+                        font-weight: 600;
+                        color: #495057;
+                      }
+                      
+                      .ag-theme-alpine .ag-row {
+                        border-bottom: 1px solid var(--ag-border-color);
+                      }
+  
+                      .ag-theme-alpine .ag-cell {
+                        padding: 8px;
+                      }
+                    `}
+                                </style>
+                                <AgGridReact
+                                    rowData={parts || []}
+                                    domLayout="normal"
+                                    // defaultColDef={{
+                                    //   sortable: true,
+                                    //   resizable: true,
+                                    //   filter: true,
+                                    //   floatingFilter: true,
+
+                                    // }}
+                                    columnDefs={[
+                                        {
+                                            field: "partId",
+                                            headerName: "Part Number",
+                                            flex: 1.5,
+                                            minWidth: 120,
+                                            sortable: true,
+                                            resizable: true,
+                                            filter: true,
+                                            floatingFilter: true,
+                                        },
+                                        {
+                                            field: "desc",
+                                            headerName: "Description",
+                                            flex: 1.5,
+                                            minWidth: 120,
+                                            sortable: true,
+                                            resizable: true,
+                                            filter: true,
+                                            floatingFilter: true,
+                                        },
+                                        {
+                                            field: "qty",
+                                            headerName: "Qty",
+                                            flex: 0.8,
+                                            minWidth: 80,
+                                            filter: 'agNumberColumnFilter',
+                                        },
+                                        {
+                                            field: "unit",
+                                            headerName: "Units",
+                                            flex: 0.8,
+                                            minWidth: 80,
+                                        },
+                                        {
+                                            field: "price",
+                                            headerName: "Price ($)",
+                                            flex: 1,
+                                            minWidth: 90,
+                                            filter: 'agNumberColumnFilter',
+                                            valueFormatter: params => {
+                                                if (params.value === null || params.value === undefined) return '';
+                                                return `$${parseFloat(params.value).toFixed(2)}`;
+                                            },
+                                        },
+                                    ]}
+                                    pagination={true}
+                                    paginationPageSize={10}
+                                />
+                            </div>
+                        </Box>
+                    </Card>
+                </Grid.Col>
+
+                {/* Right Section - Chart (3 columns width) */}
+                <Grid.Col span={3}>
+                    <Card withBorder radius="md" p="xs" h="100%">
+                        <Title order={5} mb="md" fw={500} c="dimmed">Spare Cost Analysis</Title>
+
+                        <Card withBorder radius="md" p="md" bg="blue.0">
+                            {/* <Text size="sm" fw={500} c="dimmed" mb="md">
+                  Spare Cost Trend
+                </Text> */}
+                            <AreaChart
+                                h={350}
+                                data={spareCostData || [
+                                    { date: 'Min', Cost: 100 },
+                                    { date: 'Estimated', Cost: 750 },
+                                    { date: 'Max', Cost: 1000 }
+                                ]}
+                                dataKey="date"
+                                series={[{ name: "Cost", color: "blue.9" }]}
+                                curveType="monotone"
+                                withGradient
+                                connectNulls
+                                gridAxis="y"
+                                withLegend={false}
+                                tooltipProps={{
+                                    content: ({ payload, label }) => {
+                                        if (payload && payload.length > 0) {
+                                            return (
+                                                <Card p="xs" withBorder>
+                                                    <Text fw={500} size="sm">{label}</Text>
+                                                    <Text size="sm">${payload[0].value}</Text>
+                                                </Card>
+                                            );
+                                        }
+                                        return null;
+                                    }
+                                }}
+                                yAxisProps={{
+                                    tickFormatter: (value) => `$${value}`,
+                                    domain: ['dataMin - 10', 'dataMax + 10']
+                                }}
+                            />
+                        </Card>
+                    </Card>
+                </Grid.Col>
+            </Grid>
+        </Box>
+    );
+};
+
+
+const FindingsWiseSection: React.FC<FindingsWiseSectionProps> = ({ findings }) => {
     const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
     const [selectedCluster, setSelectedCluster] = useState<any>(null);
     const [selectedFindingDetail, setSelectedFindingDetail] = useState<FindingDetail | null>(null);
@@ -2812,8 +3338,9 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
     const [clusterSearch, setClusterSearch] = useState<string>('');
     const [tableOpened, setTableOpened] = useState(false);
     const [flattenedData, setFlattenedData] = useState([]);
-    
+
     // Extract unique task IDs from findings
+
     const uniqueTaskIds = useMemo(() => {
         const taskIds = findings.map(finding => finding.taskId);
         return [...new Set(taskIds)];
@@ -2822,8 +3349,8 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
     // Filter tasks based on search
     const filteredTasks = useMemo(() => {
         if (!taskSearch.trim()) return uniqueTaskIds;
-        
-        return uniqueTaskIds.filter(taskId => 
+
+        return uniqueTaskIds.filter(taskId =>
             taskId.toLowerCase().includes(taskSearch.toLowerCase())
         );
     }, [uniqueTaskIds, taskSearch]);
@@ -2876,14 +3403,14 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
     // Get all clusters for the selected task with their probability values
     const getClustersForTask = useMemo(() => {
         if (!selectedTaskId) return [];
-        
+
         // Find all findings with the selected taskId
         const relatedFindings = findings.filter(f => f.taskId === selectedTaskId);
         if (relatedFindings.length === 0) return [];
-        
+
         // Extract all clusters from all findings with this taskId along with their prob values
         const clusterMap: { cluster: string, prob: number }[] = [];
-        
+
         relatedFindings.forEach(finding => {
             finding.details.forEach(detail => {
                 if (detail.cluster && !clusterMap.some(item => item.cluster === detail.cluster)) {
@@ -2894,7 +3421,7 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
                 }
             });
         });
-        
+
         // Sort the clusters by prob value in descending order
         return clusterMap.sort((a, b) => b.prob - a.prob);
     }, [findings, selectedTaskId]);
@@ -2902,8 +3429,8 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
     // Filter clusters based on search
     const filteredClusters = useMemo(() => {
         if (!clusterSearch.trim()) return getClustersForTask;
-        
-        return getClustersForTask.filter(clusterItem => 
+
+        return getClustersForTask.filter(clusterItem =>
             clusterItem.cluster.toLowerCase().includes(clusterSearch.toLowerCase())
         );
     }, [getClustersForTask, clusterSearch]);
@@ -2911,7 +3438,7 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
     // Get finding detail for selected cluster
     const getSelectedFindingDetail = useMemo(() => {
         if (!selectedTaskId || !selectedCluster) return null;
-        
+
         // Find the finding that contains the selected cluster
         for (const finding of findings) {
             if (finding.taskId === selectedTaskId) {
@@ -2922,7 +3449,7 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
                 }
             }
         }
-        
+
         return null;
     }, [findings, selectedTaskId, selectedCluster]);
 
@@ -2931,7 +3458,7 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
         if (Object.keys(filteredGroups).length > 0 && !selectedTaskId) {
             const firstGroupKey = Object.keys(filteredGroups)[0];
             const firstTaskId = filteredGroups[firstGroupKey][0];
-            
+
             setSelectedTaskId(firstTaskId);
         }
     }, [filteredGroups, selectedTaskId]);
@@ -2941,7 +3468,7 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
         if (selectedTaskId) {
             // Get sorted clusters for this task (already sorted by prob in getClustersForTask)
             const sortedClusters = getClustersForTask;
-            
+
             // If there are clusters available, select the one with highest probability (first in the sorted array)
             if (sortedClusters.length > 0) {
                 const highestProbCluster = sortedClusters[0].cluster;
@@ -2962,17 +3489,17 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
     // Format spare parts for display
     const formattedSpareParts = useMemo(() => {
         if (!selectedFindingDetail) return [];
-        
+
         // Check if using spareParts or spare_parts field based on data structure
         const parts = selectedFindingDetail.spare_parts || [];
-        
+
         return parts.map(part => ({
             partId: part.partId,
             desc: part.desc,
             qty: part.qty || 1, // Default to 1 if not specified
             unit: part.unit,
             price: part.price || 0, // Default to 0 if not specified
-            prob : part.prob || 0
+            prob: part.prob || 0
         }));
     }, [selectedFindingDetail]);
 
@@ -3013,7 +3540,7 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
                         partDesc: '-',
                         unit: '-',
                         qty: 0,
-                        price:0,
+                        price: 0,
                         prob: 0
                     });
                 }
@@ -3024,7 +3551,7 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
     }, [findings]);
 
     // Column definitions for the table
-    const columnDefs : ColDef[] = [
+    const columnDefs: ColDef[] = [
         { headerName: 'Source Task', field: 'sourceTask', filter: true, sortable: true, floatingFilter: true, resizable: true, width: 200, pinned: 'left' },
         { headerName: 'Description', field: 'description', filter: true, floatingFilter: true, resizable: true, width: 400 },
         { headerName: 'Cluster ID', field: 'cluster_id', filter: true, sortable: true, floatingFilter: true, resizable: true, width: 280 },
@@ -3039,7 +3566,7 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
                 return (
                     <Flex direction='row' justify='space-between'>
                         <Badge variant="light" color="teal" fullWidth>
-                            Min : {val?.data?.mhsMin?.toFixed(0)  || "-"}
+                            Min : {val?.data?.mhsMin?.toFixed(0) || "-"}
                         </Badge>
                         <Badge variant="light" color="blue" fullWidth>
                             Avg : {val?.data?.mhsAvg?.toFixed(0) || "-"}
@@ -3053,32 +3580,32 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
         },
         { headerName: 'Part Number', field: 'partId', filter: true, sortable: true, floatingFilter: true, resizable: true, width: 150 },
         { headerName: 'Part Description', field: 'partDesc', filter: true, sortable: true, floatingFilter: true, resizable: true, width: 200 },
-        { 
-            headerName: 'Quantity', 
-            field: 'qty', 
-            filter: true, 
-            sortable: true, 
-            floatingFilter: true, 
-            resizable: true, 
+        {
+            headerName: 'Quantity',
+            field: 'qty',
+            filter: true,
+            sortable: true,
+            floatingFilter: true,
+            resizable: true,
             width: 200,
-            cellRenderer: (val :any) => {
+            cellRenderer: (val: any) => {
                 return (
                     <Text>
-                        {val?.data?.qty?.toFixed(2)  || "-"}
+                        {val?.data?.qty?.toFixed(2) || "-"}
                     </Text>
                 )
             }
         },
         { headerName: 'Unit', field: 'unit', filter: true, sortable: true, floatingFilter: true, resizable: true, width: 100 },
-        { 
-            headerName: 'Price ($)', 
-            field: 'price', 
-            filter: true, 
-            sortable: true, 
-            floatingFilter: true, 
-            resizable: true, 
+        {
+            headerName: 'Price ($)',
+            field: 'price',
+            filter: true,
+            sortable: true,
+            floatingFilter: true,
+            resizable: true,
             width: 200,
-            cellRenderer: (val :any) => {
+            cellRenderer: (val: any) => {
                 return (
                     <Text>
                         {val?.data?.price?.toFixed(2) || "-"}
@@ -3086,18 +3613,18 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
                 )
             }
         },
-        { 
-            headerName: 'Part Probability (%)', 
-            field: 'prob', 
-            filter: true, 
-            sortable: true, 
-            floatingFilter: true, 
-            resizable: true, 
+        {
+            headerName: 'Part Probability (%)',
+            field: 'prob',
+            filter: true,
+            sortable: true,
+            floatingFilter: true,
+            resizable: true,
             width: 200,
-            cellRenderer: (val :any) => {
+            cellRenderer: (val: any) => {
                 return (
                     <Text>
-                        {val?.data?.prob?.toFixed(2) || "-" } '%'
+                        {val?.data?.prob?.toFixed(2) || "-"} '%'
                     </Text>
                 )
             }
@@ -3173,7 +3700,7 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
     // UPDATED: Function to handle task selection and auto-select highest probability cluster
     const handleTaskSelection = (taskId: string) => {
         setSelectedTaskId(taskId);
-        
+
         // We do not need to manually set the first cluster here as the useEffect will handle it
         // The useEffect watching selectedTaskId and getClustersForTask will automatically 
         // select the highest probability cluster when the task changes
@@ -3252,10 +3779,10 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
                     />
                 </div>
             </Modal>
-            
-            <Card 
-                p={10} 
-                c='white' 
+
+            <Card
+                p={10}
+                c='white'
                 bg='#124076'
                 onClick={() => {
                     setTableOpened(true);
@@ -3354,9 +3881,9 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
                                         selectedTaskId ? (
                                             filteredClusters.length > 0 ? (
                                                 filteredClusters.map((clusterItem, clusterIndex) => (
-                                                    <Tooltip 
-                                                    key={clusterIndex} 
-                                                    label={clusterItem.cluster}
+                                                    <Tooltip
+                                                        key={clusterIndex}
+                                                        label={clusterItem.cluster}
                                                     // label={`${clusterItem.cluster} (Probability: ${clusterItem.prob.toFixed(2)}%)`}
                                                     >
                                                         <Badge
@@ -3445,12 +3972,12 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
                                             </Text>
                                         </Grid.Col>
                                         <Grid.Col span={8}>
-                                            <Progress w="100%" color="#E07B39" radius="md" size="lg" 
-                                                value={(selectedFindingDetail?.prob)*100 || 0} />
+                                            <Progress w="100%" color="#E07B39" radius="md" size="lg"
+                                                value={((selectedFindingDetail?.prob ?? 0) * 100)} />
                                         </Grid.Col>
                                         <Grid.Col span={2}>
                                             <Text size="sm" fw={600} c="#E07B39">
-                                                { (selectedFindingDetail?.prob)*100 || 0} %
+                                                {((selectedFindingDetail?.prob ?? 0) * 100)} %
                                             </Text>
                                         </Grid.Col>
                                     </Grid>
@@ -3503,19 +4030,19 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
                                 <Space h="lg" />
 
                                 <Text size="md" fw={500} c="dimmed">
-                                    Skills 
+                                    Skills
                                 </Text>
-                                
+
                                 <SimpleGrid cols={4}>
-                                    { 
-                                     selectedFindingDetail?.skill?.map((skl: any, index: number) => (
-                                        <Badge key={index} fullWidth color="cyan" size="lg" radius="md">
-                                            {skl}
-                                        </Badge>
-                                    ))
+                                    {
+                                        selectedFindingDetail?.skill?.map((skl: any, index: number) => (
+                                            <Badge key={index} fullWidth color="cyan" size="lg" radius="md">
+                                                {skl}
+                                            </Badge>
+                                        ))
                                     }
                                 </SimpleGrid>
-                                
+
                                 <Space h="md" />
 
                                 <Text size="md" mb="xs" fw={500} c="dimmed">
@@ -3581,12 +4108,12 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
                                                 sortable: true,
                                                 resizable: true,
                                                 flex: 1,
-                                                cellRenderer:(val:any)=>{
+                                                cellRenderer: (val: any) => {
                                                     return (
                                                         <>
-                                                        <Text>
-                                                            {Math.round(val?.data?.qty) || "-"}
-                                                        </Text>
+                                                            <Text>
+                                                                {Math.round(val?.data?.qty) || "-"}
+                                                            </Text>
                                                         </>
                                                     )
                                                 }
@@ -3604,12 +4131,12 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
                                                 sortable: true,
                                                 resizable: true,
                                                 flex: 1,
-                                                cellRenderer:(val:any)=>{
+                                                cellRenderer: (val: any) => {
                                                     return (
                                                         <>
-                                                        <Text>
-                                                            {val?.data?.price?.toFixed(2) || 0}
-                                                        </Text>
+                                                            <Text>
+                                                                {val?.data?.price?.toFixed(2) || 0}
+                                                            </Text>
                                                         </>
                                                     )
                                                 }
@@ -3620,12 +4147,12 @@ const OverallEstimateReport: React.FC<TATDashboardProps> = ({
                                                 sortable: true,
                                                 resizable: true,
                                                 flex: 1,
-                                                cellRenderer:(val:any)=>{
+                                                cellRenderer: (val: any) => {
                                                     return (
                                                         <>
-                                                        <Text>
-                                                        {(val?.data?.prob ? val.data.prob * 100 : 0) + " %"}
-                                                        </Text>
+                                                            <Text>
+                                                                {(val?.data?.prob ? val.data.prob * 100 : 0) + " %"}
+                                                            </Text>
                                                         </>
                                                     )
                                                 }
@@ -3842,7 +4369,7 @@ const PreloadWiseSection: React.FC<{ tasks: any[] }> = ({ tasks }) => {
                     <Flex direction='row' justify='space-between'>
 
                         <Badge variant="light" color="teal" fullWidth>
-                            Min : {val?.data?.mhsMin?.toFixed(0)  || "-"}
+                            Min : {val?.data?.mhsMin?.toFixed(0) || "-"}
                         </Badge>
                         <Badge variant="light" color="blue" fullWidth>
                             Avg : {val?.data?.mhsAvg?.toFixed(0) || "-"}
@@ -4058,7 +4585,7 @@ const PreloadWiseSection: React.FC<{ tasks: any[] }> = ({ tasks }) => {
 
         // Write the file and trigger download
         XLSX.writeFile(workbook, "MPD_Tasks.xlsx");
-    };   
+    };
 
 
 
@@ -4332,19 +4859,19 @@ border-bottom: none;
                                             </SimpleGrid>
                                             <Space h="lg" />
 
-                                <Text size="md" fw={500} c="dimmed">
-                                    Skills  
-                                </Text>
-                                
-                                    <SimpleGrid cols={8}>
-                                   { selectedTask?.skill?.map((skl:any)=>
-                                        <>
-                                        <Badge fullWidth color="cyan" size="lg" radius="md">
-                                            {skl}
-                                        </Badge>
-                                        </>
-                                    )}
-                                    </SimpleGrid>
+                                            <Text size="md" fw={500} c="dimmed">
+                                                Skills
+                                            </Text>
+
+                                            <SimpleGrid cols={8}>
+                                                {selectedTask?.skill?.map((skl: any) =>
+                                                    <>
+                                                        <Badge fullWidth color="cyan" size="lg" radius="md">
+                                                            {skl}
+                                                        </Badge>
+                                                    </>
+                                                )}
+                                            </SimpleGrid>
 
                                             <Space h="md" />
                                             <Text size="md" mb="xs" fw={500} c="dimmed">
