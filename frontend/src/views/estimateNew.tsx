@@ -3817,7 +3817,24 @@ const FindingsWiseSection: React.FC<FindingsWiseSectionProps> = ({ findings }) =
                             <Card bg="none" p={0} h="calc(80vh - 150px)">
                                 <ScrollArea h="100%" scrollbarSize={0}>
                                     <Accordion defaultValue={defaultOpenValues} multiple>
-                                        {Object.keys(filteredGroups).map((groupKey) => (
+                                        {Object.keys(filteredGroups)
+                                        .sort((a, b) => {
+                                            const isNumA = /^\d+$/.test(a);
+                                            const isNumB = /^\d+$/.test(b);
+                                            
+                                            // Alphabetical values first
+                                            if (!isNumA && isNumB) return -1;
+                                            if (isNumA && !isNumB) return 1;
+                                            
+                                            // Sort alphabetically
+                                            if (!isNumA && !isNumB) {
+                                                return a.localeCompare(b);
+                                            }
+                                            
+                                            // Sort numerically
+                                            return parseInt(a, 10) - parseInt(b, 10);
+                                        })
+                                        .map((groupKey) => (
                                             <Accordion.Item key={groupKey} value={groupKey}>
                                                 <Accordion.Control>
                                                     <Text fw={600}>{groupKey}</Text>
