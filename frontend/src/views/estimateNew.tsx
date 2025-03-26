@@ -2478,9 +2478,9 @@ border-bottom: none;
                                                             //     ]
                                                         }
                                                         spareCostData={[
-                                                            { date: "Min", Cost: Math.round(estimateReportData?.overallEstimateReport?.estimatedSpareCost * 0.85) },
+                                                            { date: "Min", Cost: Math.round(estimateReportData?.overallEstimateReport?.estimatedSpareCost * 0.95) },
                                                             { date: "Estimated", Cost: Math.round(estimateReportData?.overallEstimateReport?.estimatedSpareCost) },
-                                                            { date: "Max", Cost: Math.round(estimateReportData?.overallEstimateReport?.estimatedSpareCost * 1.10) },
+                                                            { date: "Max", Cost: Math.round(estimateReportData?.overallEstimateReport?.estimatedSpareCost * 1.03) },
                                                         ]}
                                                     />
                                                 </>
