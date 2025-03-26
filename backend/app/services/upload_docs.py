@@ -682,9 +682,9 @@ class ExcelUploadService:
         latest_document = results[-1]
         latest_document.update({
 
-        'totalMhs': 12635.8,       # Static man hours
-        'tatTime':1264,         # Static TAT time
-        'totalPartsCost': 498836.31,  # Static parts cost
+        'totalMhs': 9731,       # Static man hours
+        'tatTime':980,         # Static TAT time
+        'totalPartsCost': 563628.12,  # Static parts cost
 
         })
         for result in results:
