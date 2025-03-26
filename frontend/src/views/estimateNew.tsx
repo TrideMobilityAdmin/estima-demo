@@ -2496,9 +2496,9 @@ border-bottom: none;
                                                             estimateReportData?.aggregatedFindings?.spareParts || []
                                                         }
                                                         spareCostData={[
-                                                            { date: "Min", Cost: Math.round(estimateReportData?.aggregatedFindings?.estimatedSpareCost * 0.85) },
+                                                            { date: "Min", Cost: Math.round(estimateReportData?.aggregatedFindings?.estimatedSpareCost * 0.95) },
                                                             { date: "Estimated", Cost: Math.round(estimateReportData?.aggregatedFindings?.estimatedSpareCost) },
-                                                            { date: "Max", Cost: Math.round(estimateReportData?.aggregatedFindings?.estimatedSpareCost * 1.10) },
+                                                            { date: "Max", Cost: Math.round(estimateReportData?.aggregatedFindings?.estimatedSpareCost * 1.03) },
                                                         ]}
                                                     />
                                                     </>
@@ -2514,9 +2514,9 @@ border-bottom: none;
                                                             estimateReportData?.aggregatedTasks?.spareParts || []
                                                         }
                                                         spareCostData={[
-                                                            { date: "Min", Cost: Math.round(estimateReportData?.aggregatedTasks?.estimatedSpareCost * 0.85) },
+                                                            { date: "Min", Cost: Math.round(estimateReportData?.aggregatedTasks?.estimatedSpareCost * 0.95) },
                                                             { date: "Estimated", Cost: Math.round(estimateReportData?.aggregatedTasks?.estimatedSpareCost) },
-                                                            { date: "Max", Cost: Math.round(estimateReportData?.aggregatedTasks?.estimatedSpareCost * 1.10) },
+                                                            { date: "Max", Cost: Math.round(estimateReportData?.aggregatedTasks?.estimatedSpareCost * 1.03) },
                                                         ]}
                                                     />
                                                         </>
