@@ -116,7 +116,7 @@ export const useApi = () => {
   const getAllEstimatesStatus = async () => {
     try {
       const response = await axiosInstance.get(getEstimateStatus_Url);
-      console.log("✅ API Response all estimates status :", response);
+      console.log("✅ API Response all estimates status :", response.data);
       return response.data;
     } catch (error: any) {
       console.error("❌ API Error:", error.response?.data || error.message);

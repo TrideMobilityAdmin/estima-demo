@@ -127,9 +127,9 @@ export default function EstimateNew() {
             const filteredData = data.filter((item: any) => new Date(item.createdAt) >= threeDaysAgo);
             const sortedData = filteredData.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
-            setEstimatesStatusData(sortedData);
+            // setEstimatesStatusData(sortedData);
 
-            // setEstimatesStatusData(data?.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
+            setEstimatesStatusData(data?.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
         }
         setLoading(false);
     };
