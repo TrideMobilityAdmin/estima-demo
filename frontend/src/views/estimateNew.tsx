@@ -57,6 +57,7 @@ import { useMemo, useRef } from "react";
 import { userName } from "../components/tokenJotai";
 import excelTemplateFile from '../assets/RFQ_Excel_Template.xlsx';
 import estimateData from '../../src/assets/IHV_output.json';
+import skillsData from '../../src/assets/skillsData.json';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -427,37 +428,43 @@ export default function EstimateNew() {
 
     console.log("rfq sub >>> ", rfqSubmissionResponse);
 
+    // SKILLS API CALL 
+    // const handleSubmitSkills = async () => {
+    //     const validTasks = validatedSkillsTasks?.filter((task) => task?.status === true)?.map((task) => task?.taskid);
+
+    //     if (validTasks.length === 0) {
+    //         // showAppNotification("warning", "Warning!", "No valid tasks available to estimate the report.");
+    //         return null; // Return null to indicate no response
+    //     }
+
+    //     const requestData = {
+    //         source_tasks: validTasks,
+    //     };
+
+    //     console.log("Submitting data:", requestData);
+
+    //     try {
+    //         setLoading(true);
+    //         const response = await getSkillAnalysis(requestData);
+    //         console.log("API Response:", response);
+
+    //         // if (response) {
+    //         setSkillAnalysisData(response);
+    //         // showAppNotification("success", "Success!", "Successfully Generated Skill Analysis");
+    //         return response; // Return the response
+    //         // }
+    //     } catch (error) {
+    //         // showAppNotification("error", "Error!", "Failed Generating Skill Analysis, try again");
+    //         console.error("API Error:", error);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    //     return null; // Return null if no response
+    // };
+
+    // SKILLS JSON DATA
     const handleSubmitSkills = async () => {
-        const validTasks = validatedSkillsTasks?.filter((task) => task?.status === true)?.map((task) => task?.taskid);
-
-        if (validTasks.length === 0) {
-            // showAppNotification("warning", "Warning!", "No valid tasks available to estimate the report.");
-            return null; // Return null to indicate no response
-        }
-
-        const requestData = {
-            source_tasks: validTasks,
-        };
-
-        console.log("Submitting data:", requestData);
-
-        try {
-            setLoading(true);
-            const response = await getSkillAnalysis(requestData);
-            console.log("API Response:", response);
-
-            // if (response) {
-            setSkillAnalysisData(response);
-            // showAppNotification("success", "Success!", "Successfully Generated Skill Analysis");
-            return response; // Return the response
-            // }
-        } catch (error) {
-            // showAppNotification("error", "Error!", "Failed Generating Skill Analysis, try again");
-            console.error("API Error:", error);
-        } finally {
-            setLoading(false);
-        }
-        return null; // Return null if no response
+            setSkillAnalysisData(skillsData);  
     };
 
     useEffect(() => {
