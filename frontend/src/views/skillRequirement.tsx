@@ -755,6 +755,8 @@ export default function SkillRequirement() {
                         </>
                     }
                 />
+                <SkillRequirementAnalytics skillAnalysisData={skillAnalysisData}/>
+                
                 {/* <SimpleGrid cols={4}>
                     <Card withBorder radius='md' bg='#e1e6f7'>
                         <Group gap='lg' justify="space-between">
@@ -846,7 +848,6 @@ export default function SkillRequirement() {
                         </ScrollArea>
                     </Card>
                 </SimpleGrid> */}
-                <SkillRequirementAnalytics skillAnalysisData={skillAnalysisData}/>
             </div>
         </>
     )

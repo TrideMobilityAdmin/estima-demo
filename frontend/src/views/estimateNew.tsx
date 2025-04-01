@@ -57,7 +57,8 @@ import { useMemo, useRef } from "react";
 import { userName } from "../components/tokenJotai";
 import excelTemplateFile from '../assets/RFQ_Excel_Template.xlsx';
 import estimateData from '../../src/assets/IHV_output.json';
-import skillsData from '../../src/assets/skillsData.json';
+import skillsData from '../../src/assets/skillsDataNew.json';
+import SkillRequirementAnalyticsNew from "./skillReqAnalyticsNew";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -2542,7 +2543,8 @@ border-bottom: none;
                         </>
                     ) : (
                         <>
-                            <SkillRequirementAnalytics skillAnalysisData={skillAnalysisData} />
+                            {/* <SkillRequirementAnalytics skillAnalysisData={skillAnalysisData} /> */}
+                            <SkillRequirementAnalyticsNew skillAnalysisData={skillAnalysisData} />
                         </>
                     )
                 }

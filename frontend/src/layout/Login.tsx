@@ -26,7 +26,7 @@ import {
   // saveAuthData,
   // airportTrolleyImg,
 } from "../constants/GlobalImports";
-import flightBg  from '../../public/airCraft8.jpg'
+import flightBg from '../../public/airCraft8.jpg'
 import { Group, Overlay } from "@mantine/core";
 import { entityID, roleID, userID, userName, userToken } from "../components/tokenJotai";
 import { clearAuthState, saveAuthData } from "../main";
@@ -78,64 +78,48 @@ function Login() {
   // const [roleId, setRoleID] = useAtom(roleID);
   // const [entityId, setEntityID] = useAtom(entityID);
   const login = async (values: LoginInput) => {
-    navigate("/home");
     setIsLoading(true);
     try {
       const response = await axios.post(getUserLogin_Url, {
         username: values.username,
         password: values.password,
       });
-
-      const { 
-        accessToken, 
-        userID, 
-        username
-        // roleID, 
-        // entityID 
-      } = response.data;
-
-      // console.log("responese login >>>>",response.data)
-      if (response.status === 200) {
+  
+      if (response.data?.accessToken) {
+        const { accessToken, userID, username } = response.data;
+  
         // Save user details and token
         setToken(accessToken);
         setUserID(userID);
         setName(username);
-        // setRoleID(roleID);
-        // setEntityID(entityID);
-
+  
         sessionStorage.setItem("token", accessToken);
         sessionStorage.setItem("userID", userID);
         sessionStorage.setItem("username", username);
-        // sessionStorage.setItem("roleID", roleID);
-        // sessionStorage.setItem("entityID", entityID);
-// Verify that the token is stored
-const storedToken = sessionStorage.getItem("token");
-const storedName = sessionStorage.getItem("username");
-console.log("✅ Token stored in sessionStorage:", storedToken);  
-console.log("user stored in sessionStorage:", storedName);  
-        saveAuthData({ token, status: "authenticated" });
-
+  
+        saveAuthData({ token: accessToken, status: "authenticated" });
+  
         showNotification({
           title: "Login Successful",
           message: "Welcome to EstimaAI",
           color: "green",
           style: { position: "fixed", bottom: 20, right: 20, zIndex: 1000 },
         });
+  
         setIsLoading(false);
-        // Redirect to dashboard
-        navigate("/home");
-        // window.location.reload();
+        navigate("/home"); // Navigate only after successful login
       } else {
-        setIsLoading(false);
         throw new Error("Invalid credentials or server error");
       }
     } catch (error: any) {
       setIsLoading(false);
       clearAuthState();
-      console.log("errorrrrr", error);
+      console.error("Login error:", error);
+  
+      // Extract error message from API response
       const errorMessage =
-        error.response?.data?.responseMsg || "Something went wrong!";
-
+        error.response?.data?.detail || "Incorrect username or password";
+  
       showNotification({
         title: "Login Failed",
         message: errorMessage,
@@ -144,6 +128,7 @@ console.log("user stored in sessionStorage:", storedName);
       });
     }
   };
+  
 
   // console.log("token.....",token);
   // console.log("userId.....",userId);
@@ -171,11 +156,11 @@ console.log("user stored in sessionStorage:", storedName);
           left: 0,
         }}
       />
-       <Overlay
-          gradient="linear-gradient(180deg, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, .20) 60%)"
-          opacity={1}
-          zIndex={0}
-        />
+      <Overlay
+        gradient="linear-gradient(180deg, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, .20) 60%)"
+        opacity={1}
+        zIndex={0}
+      />
 
       <Flex
         justify="center"
@@ -202,15 +187,15 @@ console.log("user stored in sessionStorage:", storedName);
             onSubmit={form.onSubmit((values) => login(values))}
           >
             <Flex align='center' justify='center' direction='column'>
-            <Title ta="center" >
-              EstimaAI
-            </Title>
-            <Text>
-            Intelligent RFQ Predictor
-            </Text>
+              <Title ta="center" >
+                EstimaAI
+              </Title>
+              <Text>
+                Intelligent RFQ Predictor
+              </Text>
             </Flex>
-            <Space h='50'/>
-            
+            <Space h='50' />
+
 
             <TextInput
               label="Username"
@@ -228,8 +213,8 @@ console.log("user stored in sessionStorage:", storedName);
             <Checkbox label="Keep me logged in" mt="xl" size="md" />
             <Button loading={isLoading} type="submit" bg="black" c='orange' fullWidth mt="xl" size="md">
 
-                Login
-              
+              Login
+
             </Button>
           </form>
         </Paper>

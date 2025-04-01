@@ -1,0 +1,148 @@
+{
+    "skillAnalysis" : {
+        "overallAggregated" : {
+            "overallTasks" : 2,
+            "overallTasksAvgTime" : 6,
+            "overallFindings" : 2,
+            "overallFindingsAvgTime" : 28
+        },
+        "tasks": [
+            {
+                "taskId": "3135200-ECTM-00006-1-IGO",
+                "taskDescription": "FAST SYSTEM : INSPECT CONNECTORS (J1, J2 & P1, P2) ON THE PBMS PROCESSOR FOR LOOSE OR DAMAGED CONNECTIONS.",
+                "skills": [
+                    {
+                        "skill": "B2",
+                        "manHours": {
+                            "min": 1.2,
+                            "max": 8.0,
+                            "avg": 5.37
+                        }
+                    }
+                ]
+            },
+            {
+                "taskId": "AWR24/002161/0624",
+                "taskDescription": "AS PER CUSTOMER WO#10516037, REFER WO 10516036, ATPCS TEST PANEL 114VM TO BE INSTALLED BACK BEFORE RELEASE TO SERVICE.",
+                "skills": [
+                    {
+                        "skill": null,
+                        "manHours": {
+                            "min": 2.0,
+                            "max": 2.0,
+                            "avg": 2.0
+                        }
+                    }
+                ]
+            }
+        ],
+        "findings": [
+            {
+                "taskId": "ZL-191-GVI-10000-1",
+                "skills": [
+                    {
+                        "skill": "B2",
+                        "manHours": {
+                            "min": 0.45,
+                            "max": 2.0,
+                            "avg": 1.23
+                        }
+                    }
+                ]
+            },
+            {
+                "taskId": "792665-CHK-10000-1 (LH)",
+                "skills": [
+                    {
+                        "skill": "B1",
+                        "manHours": {
+                            "min": 4.0,
+                            "max": 15.0,
+                            "avg": 9.5
+                        }
+                    },
+                    {
+                        "skill": null,
+                        "manHours": {
+                            "min": 16.0,
+                            "max": 16.0,
+                            "avg": 16.0
+                        }
+                    }
+                ]
+            }
+        ],
+        "skillWiseTasks" : [
+            {
+                "skill": "unknown",
+                "totalMinHours" : 1.00,
+                "totalAvgHours" : 24.96,
+                "totalMaxHours" : 40.00,
+                "tasks":[
+                    {
+                        "taskId": "3135200-ECTM-00006-1-IGO",
+                        "taskDescription": "FAST SYSTEM : INSPECT CONNECTORS (J1, J2 & P1, P2) ON THE PBMS PROCESSOR FOR LOOSE OR DAMAGED CONNECTIONS.",
+                        "manHours": {
+                            "min": 2.0,
+                            "max": 2.0,
+                            "avg": 2.0
+                        }
+                    }
+                ]
+            },
+            {
+                "skill": "B1",
+                "totalMinHours" : 1.00,
+                "totalAvgHours" : 24.96,
+                "totalMaxHours" : 40.00,
+                "tasks":[
+                    {
+                        "taskId": "3135200-ECTM-00006-1-IGO",
+                        "taskDescription": "FAST SYSTEM : INSPECT CONNECTORS (J1, J2 & P1, P2) ON THE PBMS PROCESSOR FOR LOOSE OR DAMAGED CONNECTIONS.",
+                        "manHours": {
+                            "min": 2.0,
+                            "max": 2.0,
+                            "avg": 2.0
+                        }
+                    }
+                ]
+            }
+        ],
+        "skillWiseFindings" : [
+            {
+                "skill": "unknown",
+                "totalMinHours" : 1.00,
+                "totalAvgHours" : 24.96,
+                "totalMaxHours" : 40.00,
+                "findings":[
+                    {
+                        "taskId": "3135200-ECTM-00006-1-IGO",
+                        "taskDescription": "FAST SYSTEM : INSPECT CONNECTORS (J1, J2 & P1, P2) ON THE PBMS PROCESSOR FOR LOOSE OR DAMAGED CONNECTIONS.",
+                        "manHours": {
+                            "min": 2.0,
+                            "max": 2.0,
+                            "avg": 2.0
+                        }
+                    }
+                ]
+            },
+            {
+                "skill": "B1",
+                "totalMinHours" : 1.00,
+                "totalAvgHours" : 24.96,
+                "totalMaxHours" : 40.00,
+                "findings":[
+                    {
+                        "taskId": "3135200-ECTM-00006-1-IGO",
+                        "taskDescription": "FAST SYSTEM : INSPECT CONNECTORS (J1, J2 & P1, P2) ON THE PBMS PROCESSOR FOR LOOSE OR DAMAGED CONNECTIONS.",
+                        "manHours": {
+                            "min": 2.0,
+                            "max": 2.0,
+                            "avg": 2.0
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}
