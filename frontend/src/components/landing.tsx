@@ -251,7 +251,7 @@ const Landing: React.FC = () => {
                 }}
                 order={1}
               >
-                EstimaAI
+                GarudAI
               </Title>
               <Title c="white" fw="600" fz="25">
                 Intelligent RFQ Predictor
