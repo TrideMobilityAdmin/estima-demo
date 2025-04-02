@@ -679,7 +679,13 @@ class ExcelUploadService:
 
         
         results = list(self.estima_collection.aggregate(pipeline))
-        latest_document = results[-1]
+        # Filter completed documents
+        completed_docs = [doc for doc in results if doc.get("status") == "completed"]
+
+        # Get the latest completed document
+        latest_document = completed_docs[-1] if completed_docs else None  # Handles empty list case
+
+
         latest_document.update({
 
         'totalMhs': 9731,       # Static man hours
