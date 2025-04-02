@@ -188,7 +188,7 @@ function Login() {
           >
             <Flex align='center' justify='center' direction='column'>
               <Title ta="center" >
-                EstimaAI
+                GarudAI
               </Title>
               <Text>
                 Intelligent RFQ Predictor
