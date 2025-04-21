@@ -36,7 +36,7 @@ import {
 } from "../constants/GlobalImports";
 import { AreaChart } from "@mantine/charts";
 import '../App.css';
-import { IconChartArcs3, IconCheck, IconChecklist, IconChevronDown, IconChevronUp, IconCircleCheck, IconClipboard, IconClipboardCheck, IconClock, IconClockCheck, IconClockCode, IconClockDown, IconClockHour4, IconClockShare, IconClockUp, IconDeselect, IconDownload, IconError404, IconFile, IconFileCheck, IconFileDownload, IconHourglass, IconListCheck, IconListDetails, IconLoader, IconMessage, IconMessage2Plus, IconMinimize, IconPercentage, IconPercentage66, IconPin, IconPlane, IconPlaneTilt, IconPlus, IconRecycle, IconReport, IconRowRemove, IconSettingsDollar, IconShadow, IconSquareCheck, IconStatusChange, IconTrash, IconX } from "@tabler/icons-react";
+import { IconChartArcs3, IconCheck, IconChecklist, IconChevronDown, IconChevronUp, IconCircleCheck, IconClipboard, IconClipboardCheck, IconClock, IconClockCheck, IconClockCode, IconClockDown, IconClockHour4, IconClockHour5, IconClockShare, IconClockUp, IconDeselect, IconDownload, IconError404, IconFile, IconFileCheck, IconFileDownload, IconHourglass, IconListCheck, IconListDetails, IconLoader, IconMapPin, IconMessage, IconMessage2Plus, IconMinimize, IconPercentage, IconPercentage66, IconPin, IconPlane, IconPlaneTilt, IconPlus, IconRecycle, IconReport, IconRowRemove, IconSettingsDollar, IconShadow, IconSquareCheck, IconStatusChange, IconTools, IconTrash, IconUserCog, IconX } from "@tabler/icons-react";
 import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
 import 'ag-grid-community/styles/ag-grid.css';
@@ -59,7 +59,7 @@ import excelTemplateFile from '../assets/RFQ_Excel_Template.xlsx';
 import estimateData from '../../src/assets/IHV_output.json';
 import skillsData from '../../src/assets/skillsDataNew.json';
 import SkillRequirementAnalyticsNew from "./skillReqAnalyticsNew";
-
+import accessPointData from "../assets/accessPointsData.json";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -465,7 +465,7 @@ export default function EstimateNew() {
 
     // SKILLS JSON DATA
     const handleSubmitSkills = async () => {
-            setSkillAnalysisData(skillsData);  
+        setSkillAnalysisData(skillsData);
     };
 
     useEffect(() => {
@@ -2459,12 +2459,14 @@ border-bottom: none;
                                                         { label: 'Overall Est', value: 'overall' },
                                                         { label: 'Findings', value: 'finding' },
                                                         { label: 'MPD', value: 'mpd' },
+                                                        { label: 'MPD (Standard)', value: 'mpdStandard' },
                                                     ]} />
                                                 <Title order={4} fw={500} c="dimmed">
                                                     {
                                                         tabValue === 'overall' ? ("Overall Estimate Report")
                                                             : tabValue === 'finding' ? ("Findings Report")
-                                                                : ("MPD Report")
+                                                            : tabValue === 'mpd' ? ("MPD Report")
+                                                            : ("MPD (Standard) Report")
                                                     }
                                                     {/* Overall Estimate Report */}
                                                 </Title>
@@ -2495,46 +2497,82 @@ border-bottom: none;
                                             )
                                                 : tabValue === 'finding' ? (
                                                     <>
-                                                    <OverallFindingsReport
-                                                        totalTATTime={estimateReportData?.aggregatedFindings?.estimatedTatTime || 0}
-                                                        estimatedManHrs={estimateReportData?.aggregatedFindings?.estimateManhrs || {}}
-                                                        estimatedSparesCost={estimateReportData?.aggregatedFindings?.estimatedSpareCost || 0}
-                                                        cappingUnbilledCost={0}
-                                                        parts={
-                                                            estimateReportData?.aggregatedFindings?.spareParts || []
-                                                        }
-                                                        spareCostData={[
-                                                            { date: "Min", Cost: Math.round(estimateReportData?.aggregatedFindings?.estimatedSpareCost * 0.95) },
-                                                            { date: "Estimated", Cost: Math.round(estimateReportData?.aggregatedFindings?.estimatedSpareCost) },
-                                                            { date: "Max", Cost: Math.round(estimateReportData?.aggregatedFindings?.estimatedSpareCost * 1.03) },
-                                                        ]}
-                                                    />
+                                                        <OverallFindingsReport
+                                                            totalTATTime={estimateReportData?.aggregatedFindings?.estimatedTatTime || 0}
+                                                            estimatedManHrs={estimateReportData?.aggregatedFindings?.estimateManhrs || {}}
+                                                            estimatedSparesCost={estimateReportData?.aggregatedFindings?.estimatedSpareCost || 0}
+                                                            cappingUnbilledCost={0}
+                                                            parts={
+                                                                estimateReportData?.aggregatedFindings?.spareParts || []
+                                                            }
+                                                            spareCostData={[
+                                                                { date: "Min", Cost: Math.round(estimateReportData?.aggregatedFindings?.estimatedSpareCost * 0.95) },
+                                                                { date: "Estimated", Cost: Math.round(estimateReportData?.aggregatedFindings?.estimatedSpareCost) },
+                                                                { date: "Max", Cost: Math.round(estimateReportData?.aggregatedFindings?.estimatedSpareCost * 1.03) },
+                                                            ]}
+                                                        />
                                                     </>
                                                 )
-                                                    : (
+                                                    : tabValue === 'mpd' ? (
                                                         <>
-                                                        <OverallMPDReport
-                                                        totalTATTime={estimateReportData?.aggregatedTasks?.estimatedTatTime || 0}
-                                                        estimatedManHrs={estimateReportData?.aggregatedTasks?.estimateManhrs || {}}
-                                                        estimatedSparesCost={estimateReportData?.aggregatedTasks?.estimatedSpareCost || 0}
-                                                        cappingUnbilledCost={0}
-                                                        parts={
-                                                            estimateReportData?.aggregatedTasks?.spareParts || []
-                                                        }
-                                                        spareCostData={[
-                                                            { date: "Min", Cost: Math.round(estimateReportData?.aggregatedTasks?.estimatedSpareCost * 0.95) },
-                                                            { date: "Estimated", Cost: Math.round(estimateReportData?.aggregatedTasks?.estimatedSpareCost) },
-                                                            { date: "Max", Cost: Math.round(estimateReportData?.aggregatedTasks?.estimatedSpareCost * 1.03) },
-                                                        ]}
-                                                    />
+                                                            <OverallMPDReport
+                                                                totalTATTime={estimateReportData?.aggregatedTasks?.estimatedTatTime || 0}
+                                                                estimatedManHrs={estimateReportData?.aggregatedTasks?.estimateManhrs || {}}
+                                                                estimatedSparesCost={estimateReportData?.aggregatedTasks?.estimatedSpareCost || 0}
+                                                                cappingUnbilledCost={0}
+                                                                parts={
+                                                                    estimateReportData?.aggregatedTasks?.spareParts || []
+                                                                }
+                                                                spareCostData={[
+                                                                    { date: "Min", Cost: Math.round(estimateReportData?.aggregatedTasks?.estimatedSpareCost * 0.95) },
+                                                                    { date: "Estimated", Cost: Math.round(estimateReportData?.aggregatedTasks?.estimatedSpareCost) },
+                                                                    { date: "Max", Cost: Math.round(estimateReportData?.aggregatedTasks?.estimatedSpareCost * 1.03) },
+                                                                ]}
+                                                            />
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                        <OverallMPDStandardReport
+                                                                totalTATTime={estimateReportData?.aggregatedTasks?.estimatedTatTime || 0}
+                                                                estimatedManHrs={estimateReportData?.aggregatedTasks?.estimateManhrs || {}}
+                                                                estimatedSparesCost={estimateReportData?.aggregatedTasks?.estimatedSpareCost || 0}
+                                                                cappingUnbilledCost={0}
+                                                                parts={
+                                                                    estimateReportData?.aggregatedTasks?.spareParts || []
+                                                                }
+                                                                spareCostData={[
+                                                                    { date: "Min", Cost: Math.round(estimateReportData?.aggregatedTasks?.estimatedSpareCost * 0.95) },
+                                                                    { date: "Estimated", Cost: Math.round(estimateReportData?.aggregatedTasks?.estimatedSpareCost) },
+                                                                    { date: "Max", Cost: Math.round(estimateReportData?.aggregatedTasks?.estimatedSpareCost * 1.03) },
+                                                                ]}
+                                                            />
                                                         </>
                                                     )
                                         }
 
                                         <Space h='md' />
-                                        <FindingsWiseSection tasks={estimateReportData?.tasks} findings={estimateReportData?.findings} />
-                                        <Space h='md' />
-                                        <PreloadWiseSection tasks={estimateReportData?.tasks} />
+                                        {
+                                            tabValue === 'finding' || tabValue === 'overall' ? (
+                                                <FindingsWiseSection tasks={estimateReportData?.tasks} findings={estimateReportData?.findings} />
+                                            ) : (
+                                                <></>
+                                            )
+                                        }
+                                        {
+                                            tabValue === 'mpd' || tabValue === 'overall' ? (
+                                                <PreloadWiseSection tasks={estimateReportData?.tasks} />
+                                            ) : (
+                                                <></>
+                                            )
+                                        }
+                                        {
+                                            tabValue === 'mpdStandard' || tabValue === 'overall' ? (
+                                                <AccessPointsWise accessPointData={accessPointData} />
+                                            ) : (
+                                                <></>
+                                            )
+                                        }
+                                        
                                     </>
                                 ) : (
                                     <></>
@@ -3339,6 +3377,286 @@ const OverallMPDReport: React.FC<TATDashboardProps> = ({
 };
 
 
+const OverallMPDStandardReport: React.FC<TATDashboardProps> = ({
+    totalTATTime,
+    estimatedManHrs,
+    cappingUnbilledCost,
+    parts,
+    estimatedSparesCost,
+    spareCostData,
+}: any) => {
+    return (
+        <Box>
+            {/* <Title order={4} mb="md" fw={500} c="dimmed">Overall Estimate Report</Title> */}
+            <Grid gutter="xs">
+                {/* Left Section - Estimate Overview */}
+                <Grid.Col span={3}>
+                    <Card withBorder radius="md" p="xs" h="100%">
+                        {/* <Title order={5} mb="md" fw={500} c="dimmed">Estimate Overview</Title> */}
+
+                        {/* Estimated Man Hours */}
+                        <Card withBorder radius="md" p="md" mb="md" bg="gray.0">
+                            <Text size="sm" fw={500} c="dimmed" mb="md">
+                                Estimated Man Hours
+                            </Text>
+                            <Flex gap="md" direction="column">
+                                {/* {Object.entries(estimatedManHrs || {}).map(([key, value]: any) => {
+                                    // Determine color based on key
+                                    const color = key === "min" ? "teal.6" :
+                                        key === "max" ? "blue.6" :
+                                            key === "avg" ? "teal.6" :
+                                                "green.6";
+
+                                    // Format the label
+                                    const label = key.charAt(0).toUpperCase() + key.slice(1);
+
+                                    return ( */}
+                                        <Box >
+                                            <Group justify="space-between" mb={5}>
+                                                <Text fz="xs" fw={500}>Task Man Hrs</Text>
+                                                <Text fz="sm" fw={600} c='green.6'>
+                                                    {666} Hrs
+                                                </Text>
+                                            </Group>
+                                            <Progress
+                                                color={"green.6"}
+                                                value={666 / 100}
+                                                size="md"
+                                                radius="sm"
+                                            />
+                                        </Box>
+                                        <Box >
+                                            <Group justify="space-between" mb={5}>
+                                                <Text fz="xs" fw={500}>Access Man Hrs</Text>
+                                                <Text fz="sm" fw={600} c='blue.6'>
+                                                    {444} Hrs
+                                                </Text>
+                                            </Group>
+                                            <Progress
+                                                color={"blue.6"}
+                                                value={444 / 100}
+                                                size="md"
+                                                radius="sm"
+                                            />
+                                        </Box>
+                                        <Box >
+                                            <Group justify="space-between" mb={5}>
+                                                <Text fz="xs" fw={500}>Prep Man Hrs</Text>
+                                                <Text fz="sm" fw={600} c='teal.6'>
+                                                    {888} Hrs
+                                                </Text>
+                                            </Group>
+                                            <Progress
+                                                color={"teal.6"}
+                                                value={888 / 100}
+                                                size="md"
+                                                radius="sm"
+                                            />
+                                        </Box>
+                                {/* //     );
+                                // })} */}
+                            </Flex>
+                        </Card>
+
+                        {/* Unbillable Cost */}
+                        {/* <Card withBorder radius="md" p="xs" mb="md" bg="blue.0">
+                            <Group gap="md">
+                                <ThemeIcon variant="light" radius="md" size={50} color="blue.6">
+                                    <IconSettingsDollar size={24} />
+                                </ThemeIcon>
+                                <Flex direction="column">
+                                    <Text size="sm" fw={500} c="dimmed">
+                                        Unbillable Cost
+                                    </Text>
+                                    <Text size="xl" fw={700} c="blue.6">
+                                        ${cappingUnbilledCost || 0}
+                                    </Text>
+                                </Flex>
+                            </Group>
+                        </Card> */}
+
+                        {/* Estimated Spares Cost */}
+                        {/* <Card withBorder radius="md" p="xs" bg="blue.0">
+                            <Group gap="md">
+                                <ThemeIcon variant="light" radius="md" size={50} color="blue.6">
+                                    <MdOutlineMiscellaneousServices size={24} />
+                                </ThemeIcon>
+                                <Flex direction="column">
+                                    <Text size="sm" fw={500} c="dimmed">
+                                        Estimated Spares Cost
+                                    </Text>
+                                    <Text size="xl" fw={700} c="blue.6">
+                                        ${estimatedSparesCost?.toFixed(2) || 0}
+                                    </Text>
+                                </Flex>
+                            </Group>
+                        </Card> */}
+                    </Card>
+                </Grid.Col>
+
+                {/* Center Section - Parts Table (6 columns width) */}
+                <Grid.Col span={6}>
+                    <Card withBorder radius="md" p="md" h="400px" style={{ display: 'flex', flexDirection: 'column' }}>
+                        <Title order={5} mb="md" fw={500} c="dimmed">Estimated Parts</Title>
+                        <Box style={{ flex: 1, height: '500px' }}>
+                            <div
+                                className="ag-theme-alpine"
+                                style={{
+                                    width: "100%",
+                                    height: "100%",
+                                }}
+                            >
+                                <style>
+                                    {`
+                      .ag-theme-alpine {
+                        --ag-header-background-color: #f8f9fa;
+                        --ag-odd-row-background-color: #ffffff;
+                        --ag-even-row-background-color: #f9f9f9;
+                        --ag-row-hover-color: #f1f3f5;
+                        --ag-border-color: #e9ecef;
+                        --ag-font-size: 13px;
+                      }
+                      
+                      .ag-theme-alpine .ag-header-cell {
+                        font-weight: 600;
+                        color: #495057;
+                      }
+                      
+                      .ag-theme-alpine .ag-row {
+                        border-bottom: 1px solid var(--ag-border-color);
+                      }
+  
+                      .ag-theme-alpine .ag-cell {
+                        padding: 8px;
+                      }
+                    `}
+                                </style>
+                                <AgGridReact
+                                    rowData={parts || []}
+                                    domLayout="normal"
+                                    // defaultColDef={{
+                                    //   sortable: true,
+                                    //   resizable: true,
+                                    //   filter: true,
+                                    //   floatingFilter: true,
+
+                                    // }}
+                                    columnDefs={[
+                                        {
+                                            field: "partId",
+                                            headerName: "Part Number",
+                                            flex: 1.5,
+                                            minWidth: 120,
+                                            sortable: true,
+                                            resizable: true,
+                                            filter: true,
+                                            floatingFilter: true,
+                                        },
+                                        {
+                                            field: "desc",
+                                            headerName: "Description",
+                                            flex: 1.5,
+                                            minWidth: 120,
+                                            sortable: true,
+                                            resizable: true,
+                                            filter: true,
+                                            floatingFilter: true,
+                                        },
+                                        {
+                                            field: "qty",
+                                            headerName: "Qty",
+                                            flex: 0.8,
+                                            minWidth: 80,
+                                            filter: 'agNumberColumnFilter',
+                                        },
+                                        {
+                                            field: "unit",
+                                            headerName: "Units",
+                                            flex: 0.8,
+                                            minWidth: 80,
+                                        },
+                                        {
+                                            field: "price",
+                                            headerName: "Price ($)",
+                                            flex: 1,
+                                            minWidth: 90,
+                                            filter: 'agNumberColumnFilter',
+                                            valueFormatter: params => {
+                                                if (params.value === null || params.value === undefined) return '';
+                                                return `$${parseFloat(params.value).toFixed(2)}`;
+                                            },
+                                        },
+                                    ]}
+                                    pagination={true}
+                                    paginationPageSize={10}
+                                />
+                            </div>
+                        </Box>
+                    </Card>
+                </Grid.Col>
+
+                {/* Right Section - Chart (3 columns width) */}
+                <Grid.Col span={3}>
+                    <Card withBorder radius="md" p="xs" h="100%">
+                        <Title order={5} mb="md" fw={500} c="dimmed">Spare Cost Analysis</Title>
+                        {/* Estimated Spares Cost */}
+                        <Card withBorder radius="md" p="xs" bg="blue.0">
+                            <Group gap="md">
+                                <ThemeIcon variant="light" radius="md" size={50} color="blue.6">
+                                    <MdOutlineMiscellaneousServices size={24} />
+                                </ThemeIcon>
+                                <Flex direction="column">
+                                    <Text size="sm" fw={500} c="dimmed">
+                                        Estimated Spares Cost
+                                    </Text>
+                                    <Text size="xl" fw={700} c="blue.6">
+                                        ${estimatedSparesCost?.toFixed(2) || 0}
+                                    </Text>
+                                </Flex>
+                            </Group>
+                        </Card>
+                        {/* <Card withBorder radius="md" p="md" bg="blue.0">
+                            
+                            <AreaChart
+                                h={350}
+                                data={spareCostData || [
+                                    { date: 'Min', Cost: 100 },
+                                    { date: 'Estimated', Cost: 750 },
+                                    { date: 'Max', Cost: 1000 }
+                                ]}
+                                dataKey="date"
+                                series={[{ name: "Cost", color: "blue.9" }]}
+                                curveType="monotone"
+                                withGradient
+                                connectNulls
+                                gridAxis="y"
+                                withLegend={false}
+                                tooltipProps={{
+                                    content: ({ payload, label }) => {
+                                        if (payload && payload.length > 0) {
+                                            return (
+                                                <Card p="xs" withBorder>
+                                                    <Text fw={500} size="sm">{label}</Text>
+                                                    <Text size="sm">${payload[0].value}</Text>
+                                                </Card>
+                                            );
+                                        }
+                                        return null;
+                                    }
+                                }}
+                                yAxisProps={{
+                                    tickFormatter: (value) => `$${value}`,
+                                    domain: ['dataMin - 10', 'dataMax + 10']
+                                }}
+                            />
+                        </Card> */}
+                    </Card>
+                </Grid.Col>
+            </Grid>
+        </Box>
+    );
+};
+
 const FindingsWiseSection: React.FC<FindingsWiseSectionProps> = ({ findings }) => {
     const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
     const [selectedCluster, setSelectedCluster] = useState<any>(null);
@@ -3633,7 +3951,7 @@ const FindingsWiseSection: React.FC<FindingsWiseSectionProps> = ({ findings }) =
             cellRenderer: (val: any) => {
                 return (
                     <Text>
-                        {val?.data?.prob?.toFixed(2) || "-"} '%'
+                        {val?.data?.prob?.toFixed(2) || 0} %
                     </Text>
                 )
             }
@@ -3827,47 +4145,47 @@ const FindingsWiseSection: React.FC<FindingsWiseSectionProps> = ({ findings }) =
                                 <ScrollArea h="100%" scrollbarSize={0}>
                                     <Accordion defaultValue={defaultOpenValues} multiple>
                                         {Object.keys(filteredGroups)
-                                        .sort((a, b) => {
-                                            const isNumA = /^\d+$/.test(a);
-                                            const isNumB = /^\d+$/.test(b);
-                                            
-                                            // Alphabetical values first
-                                            if (!isNumA && isNumB) return -1;
-                                            if (isNumA && !isNumB) return 1;
-                                            
-                                            // Sort alphabetically
-                                            if (!isNumA && !isNumB) {
-                                                return a.localeCompare(b);
-                                            }
-                                            
-                                            // Sort numerically
-                                            return parseInt(a, 10) - parseInt(b, 10);
-                                        })
-                                        .map((groupKey) => (
-                                            <Accordion.Item key={groupKey} value={groupKey}>
-                                                <Accordion.Control>
-                                                    <Text fw={600}>{groupKey}</Text>
-                                                </Accordion.Control>
-                                                <Accordion.Panel>
-                                                    {filteredGroups[groupKey].map((taskId, index) => (
-                                                        <Badge
-                                                            fullWidth
-                                                            key={index}
-                                                            variant={selectedTaskId === taskId ? 'filled' : "light"}
-                                                            color="#4C7B8B"
-                                                            size="lg"
-                                                            mb="md"
-                                                            h={35}
-                                                            radius="md"
-                                                            onClick={() => handleTaskSelection(taskId)}
-                                                            style={{ cursor: 'pointer' }}
-                                                        >
-                                                            <Text fw={500}>{taskId}</Text>
-                                                        </Badge>
-                                                    ))}
-                                                </Accordion.Panel>
-                                            </Accordion.Item>
-                                        ))}
+                                            .sort((a, b) => {
+                                                const isNumA = /^\d+$/.test(a);
+                                                const isNumB = /^\d+$/.test(b);
+
+                                                // Alphabetical values first
+                                                if (!isNumA && isNumB) return -1;
+                                                if (isNumA && !isNumB) return 1;
+
+                                                // Sort alphabetically
+                                                if (!isNumA && !isNumB) {
+                                                    return a.localeCompare(b);
+                                                }
+
+                                                // Sort numerically
+                                                return parseInt(a, 10) - parseInt(b, 10);
+                                            })
+                                            .map((groupKey) => (
+                                                <Accordion.Item key={groupKey} value={groupKey}>
+                                                    <Accordion.Control>
+                                                        <Text fw={600}>{groupKey}</Text>
+                                                    </Accordion.Control>
+                                                    <Accordion.Panel>
+                                                        {filteredGroups[groupKey].map((taskId, index) => (
+                                                            <Badge
+                                                                fullWidth
+                                                                key={index}
+                                                                variant={selectedTaskId === taskId ? 'filled' : "light"}
+                                                                color="#4C7B8B"
+                                                                size="lg"
+                                                                mb="md"
+                                                                h={35}
+                                                                radius="md"
+                                                                onClick={() => handleTaskSelection(taskId)}
+                                                                style={{ cursor: 'pointer' }}
+                                                            >
+                                                                <Text fw={500}>{taskId}</Text>
+                                                            </Badge>
+                                                        ))}
+                                                    </Accordion.Panel>
+                                                </Accordion.Item>
+                                            ))}
                                     </Accordion>
                                 </ScrollArea>
                             </Card>
@@ -5017,6 +5335,517 @@ border-bottom: none;
     );
 };
 
+const AccessPointsWise: React.FC<any> = ({ accessPointData }) => {
+    const [selectedAccessPoint, setSelectedAccessPoint] = useState<any>(null);
+    const [selectedTask, setSelectedTask] = useState<any>(null);
+    const [accessPointSearch, setAccessPointSearch] = useState<string>('');
+    const [taskSearch, setTaskSearch] = useState<string>('');
+
+    // Filtered Access Points based on search input
+    const filteredAccessPoints = accessPointData.filter((ap: any) =>
+        ap.name.toLowerCase().includes(accessPointSearch.toLowerCase())
+    );
+
+    // Filtered Tasks based on search input
+    const filteredTasks = selectedAccessPoint?.tasks.filter((task: any) =>
+        task.taskId.toLowerCase().includes(taskSearch.toLowerCase())
+    ) || [];
+
+    // Function to handle access point selection
+    const handleAccessPointSelect = (ap: any) => {
+        setSelectedAccessPoint(ap);
+
+        // Auto-select the first task if tasks exist and filter matches
+        if (ap.tasks && ap.tasks.length > 0) {
+            // Apply task search filter if exists
+            const filteredTasks = ap.tasks.filter((task: any) =>
+                task.taskId.toLowerCase().includes(taskSearch.toLowerCase())
+            );
+
+            // Select the first task from filtered results if available
+            if (filteredTasks.length > 0) {
+                setSelectedTask(filteredTasks[0]);
+            } else {
+                setSelectedTask(null);
+            }
+        } else {
+            setSelectedTask(null);
+        }
+    };
+
+    return (
+        <>
+            {/* Header */}
+            <Card p={10} c="white" bg="#124076" style={{ cursor: 'pointer' }}>
+                <Text size="lg" fw={600}>Access Point Details</Text>
+            </Card>
+
+            {/* Main Grid Layout */}
+            <Card withBorder p={0} h="80vh" bg="none">
+                <Space h="xs" />
+                <Grid h="100%">
+
+                    {/* Left Column: Access Points */}
+                    <Grid.Col span={3}>
+                        <Card h="100%" w="100%" p="md" bg="none">
+                            <Group>
+                                <Text size="md" fw={500} c="dimmed">Access Points</Text>
+                                <Text size="md" fw={500}>{filteredAccessPoints.length}</Text>
+                            </Group>
+
+                            <TextInput
+                                placeholder="Search access points..."
+                                value={accessPointSearch}
+                                onChange={(e) => setAccessPointSearch(e.target.value)}
+                                mb="md"
+                            />
+
+                            <ScrollArea
+                                h="calc(80vh - 150px)"
+                                offsetScrollbars
+                                scrollbarSize={6}
+                                type="scroll"
+                                styles={{
+                                    viewport: {
+                                        overflowX: 'hidden' // Disable horizontal scrolling explicitly
+                                    }
+                                }}
+                            >
+                                <div style={{ width: '100%', maxWidth: '100%' }}>
+                                    {filteredAccessPoints.map((ap: any, index: any) => (
+                                        <Badge
+                                            key={index}
+                                            variant={selectedAccessPoint === ap ? 'filled' : "light"}
+                                            color="#4C7B8B"
+                                            size="lg"
+                                            mb="md"
+                                            h={35}
+                                            radius="md"
+                                            onClick={() => handleAccessPointSelect(ap)}
+                                            styles={{
+                                                root: {
+                                                    maxWidth: '100%',
+                                                    width: '100%',
+                                                    textAlign: 'center',
+                                                    paddingLeft: '4px',
+                                                    paddingRight: '4px',
+                                                    boxSizing: 'border-box'
+                                                },
+                                            }}
+                                        >
+                                            <Tooltip label={ap.name} position="right" withinPortal>
+                                                <div style={{
+                                                    width: '100%',
+                                                    overflow: 'hidden',
+                                                    textOverflow: 'ellipsis',
+                                                    whiteSpace: 'nowrap',
+                                                    display: 'block'
+                                                }}>
+                                                    <Text fw={500} style={{
+                                                        display: 'inline-block',
+                                                        maxWidth: '100%',
+                                                        overflow: 'hidden',
+                                                        textOverflow: 'ellipsis',
+                                                        whiteSpace: 'nowrap'
+                                                    }}>
+                                                        {ap.name}
+                                                    </Text>
+                                                </div>
+                                            </Tooltip>
+                                        </Badge>
+                                    ))}
+                                </div>
+                            </ScrollArea>
+                        </Card>
+                    </Grid.Col>
+
+                    {/* Middle Column: Selected Access Point's Tasks */}
+                    <Grid.Col span={3}>
+                        <Card h="100%" w="100%" p="md" bg="none">
+                            <Group>
+                                <Text size="md" fw={500} c="dimmed">Tasks for</Text>
+                                <Text size="md" fw={500} style={{
+                                    maxWidth: 'calc(100% - 80px)',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    whiteSpace: 'nowrap'
+                                }}>
+                                    {selectedAccessPoint ? selectedAccessPoint.name : 'Selected Access Point'}
+                                </Text>
+                            </Group>
+
+                            <TextInput
+                                placeholder="Search tasks..."
+                                value={taskSearch}
+                                onChange={(e) => {
+                                    setTaskSearch(e.target.value);
+                                    // Reapply auto-selection after search changes
+                                    if (selectedAccessPoint) {
+                                        const newFilteredTasks = selectedAccessPoint.tasks.filter((task: any) =>
+                                            task.taskId.toLowerCase().includes(e.target.value.toLowerCase())
+                                        );
+                                        if (newFilteredTasks.length > 0) {
+                                            setSelectedTask(newFilteredTasks[0]);
+                                        } else {
+                                            setSelectedTask(null);
+                                        }
+                                    }
+                                }}
+                                mb="md"
+                                disabled={!selectedAccessPoint}
+                            />
+
+                            <ScrollArea
+                                h="calc(80vh - 150px)"
+                                offsetScrollbars
+                                scrollbarSize={6}
+                                type="scroll"
+                                styles={{
+                                    viewport: {
+                                        overflowX: 'hidden' // Disable horizontal scrolling explicitly
+                                    }
+                                }}
+                            >
+                                <div style={{ width: '100%', maxWidth: '100%' }}>
+                                    {filteredTasks.map((task: any, index: any) => (
+                                        <Tooltip key={index} label={`Zone: ${task.zone}`} position="right" withinPortal>
+                                            <Badge
+                                                variant={selectedTask === task ? 'filled' : "light"}
+                                                color="#4C7B8B"
+                                                size="lg"
+                                                mb="md"
+                                                h={35}
+                                                radius="md"
+                                                onClick={() => setSelectedTask(task)}
+                                                styles={{
+                                                    root: {
+                                                        maxWidth: '100%',
+                                                        width: '100%',
+                                                        textAlign: 'center',
+                                                        paddingLeft: '4px',
+                                                        paddingRight: '4px',
+                                                        boxSizing: 'border-box'
+                                                    },
+                                                }}
+                                            >
+                                                <div style={{
+                                                    width: '100%',
+                                                    overflow: 'hidden',
+                                                    textOverflow: 'ellipsis',
+                                                    whiteSpace: 'nowrap',
+                                                    display: 'block'
+                                                }}>
+                                                    <Text fw={500} style={{
+                                                        display: 'inline-block',
+                                                        maxWidth: '100%',
+                                                        overflow: 'hidden',
+                                                        textOverflow: 'ellipsis',
+                                                        whiteSpace: 'nowrap'
+                                                    }}>
+                                                        {task.taskId}
+                                                    </Text>
+                                                </div>
+                                            </Badge>
+                                        </Tooltip>
+                                    ))}
+                                </div>
+                            </ScrollArea>
+                        </Card>
+                    </Grid.Col>
+
+                    {/* Right Column: Details Panel (Access Point + Task Details) */}
+                    <Grid.Col span={6}>
+                        <Card
+                            radius="xl"
+                            h="100%"
+                            w="100%"
+                            shadow="sm"
+                            p="md"
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                overflow: 'hidden'
+                            }}
+                        >
+                            <Space h="lg" />
+                            <div
+                                style={{
+                                    flex: 1,
+                                    overflowY: 'auto',
+                                    scrollbarWidth: 'none',
+                                    maxHeight: 'calc(70vh - 50px)',
+                                }}
+                            >
+                                {selectedAccessPoint ? (
+                                    <>
+                                        {/* Access Point Details Section */}
+                                        <Group justify="space-between">
+                                            <Text fw={600}>Access Point Information</Text>
+                                            <Card bg='#e7f5ff' shadow="0" p={5} radius='md'>
+                                                <Group gap='xs'>
+                                                    <ThemeIcon variant="light" radius="md" size="md">
+                                                        <IconMapPin style={{ width: '70%', height: '70%' }} />
+                                                    </ThemeIcon>
+                                                    <Text fw={600}>{selectedTask?.zone || "-"}</Text>
+                                                </Group>
+                                                {/* {selectedTask?.zone || "-"} */}
+                                            </Card>
+                                        </Group>
+
+                                        <Space h='sm' />
+                                        <SimpleGrid cols={2} spacing="md">
+                                            <Card bg='#e7f5ff' shadow="0" radius='md'>
+                                                <Group justify="space-between" align="start">
+                                                    <Flex direction='column'>
+                                                        <Text fz='xs' c="dimmed">Name</Text>
+                                                        <Text fz='lg' fw={600}>{selectedAccessPoint?.name || "-"}</Text>
+                                                    </Flex>
+                                                </Group>
+                                            </Card>
+                                            <Card bg='#e7f5ff' shadow="0" radius='md'>
+                                                <Group justify="space-between" align="start">
+                                                    <Flex direction='column'>
+                                                        <Text fz='xs' c="dimmed">Location</Text>
+                                                        <Text fz='lg' fw={600}>{selectedAccessPoint?.location || "-"}</Text>
+                                                    </Flex>
+                                                </Group>
+                                            </Card>
+                                            <Card bg='#e7f5ff' shadow="0" radius='md'>
+                                                <Group justify="space-between" align="start">
+                                                    <Flex direction='column'>
+                                                        <Text fz='xs' c="dimmed">Aircraft</Text>
+                                                        <Text fz='lg' fw={600}>{selectedAccessPoint?.aircraft || "-"}</Text>
+                                                    </Flex>
+                                                </Group>
+                                            </Card>
+                                            <Card bg='#e7f5ff' shadow="0" radius='md'>
+                                                <Group justify="space-between" align="start">
+                                                    <Flex direction='column'>
+                                                        <Text fz='xs' c="dimmed">Panel Number</Text>
+                                                        <Text fz='lg' fw={600}>{selectedAccessPoint?.panelNumber || "-"}</Text>
+                                                    </Flex>
+                                                </Group>
+                                            </Card>
+                                        </SimpleGrid>
+
+                                        <Divider my="md" />
+
+                                        {/* Task Details Section */}
+                                        {selectedTask ? (
+                                            <>
+                                                <Text fw={600}>Selected Task Details</Text>
+                                                {/* <Space h='sm' />
+                                                <Grid>
+                                                    <Grid.Col span={3}>
+                                                        <Text size="md" fw={500} c="dimmed">
+                                                            Zone:
+                                                        </Text>
+                                                    </Grid.Col>
+                                                    <Grid.Col span={9}>
+                                                        <Badge color="cyan" size="md" radius="lg">
+                                                            {selectedTask?.zone || "-"}
+                                                        </Badge>
+                                                    </Grid.Col>
+                                                </Grid> */}
+                                                <Space h='sm' />
+                                                <Grid>
+                                                    <Grid.Col span={3}>
+                                                        <Text size="md" fw={500} c="dimmed">
+                                                            Source Task:
+                                                        </Text>
+                                                    </Grid.Col>
+                                                    <Grid.Col span={9}>
+                                                        <Text size="sm" fw={500}>
+                                                            {selectedTask?.taskId || "-"}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Space h='sm' />
+                                                <Grid>
+                                                    <Grid.Col span={3}>
+                                                        <Text size="md" fw={500} c="dimmed">
+                                                            Description:
+                                                        </Text>
+                                                    </Grid.Col>
+                                                    <Grid.Col span={9}>
+                                                        <Text size="sm" fw={500}>
+                                                            {selectedTask?.desc || "-"}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                {/* <Space h='sm' />
+                                                <Grid>
+                                                    <Grid.Col span={3}>
+                                                        <Text size="md" fw={500} c="dimmed">
+                                                            Interval:
+                                                        </Text>
+                                                    </Grid.Col>
+                                                    <Grid.Col span={9}>
+                                                        <Badge color="grape" size="md" radius="lg">
+                                                            {selectedTask?.interval || "-"}
+                                                        </Badge>
+                                                    </Grid.Col>
+                                                </Grid> */}
+                                                <Space h="sm" />
+                                                {/* <Text size="md" fw={500} c="dimmed">
+                                                    Man Hours
+                                                </Text> */}
+                                                <SimpleGrid cols={2}>
+                                                    {/* <Card bg='#daf7de' shadow="0" radius='md'>
+                                                        <Group justify="space-between" align="start">
+                                                            <Flex direction='column'>
+                                                                <Text fz='xs'>Min</Text>
+                                                                <Text fz='xl' fw={600}>{selectedTask?.mhs?.min?.toFixed(0) || 0} Hr</Text>
+                                                            </Flex>
+                                                            <IconClockDown color="green" size='25' />
+                                                        </Group>
+                                                    </Card>
+                                                    <Card bg='#fcebeb' shadow="0" radius='md'>
+                                                        <Group justify="space-between" align="start">
+                                                            <Flex direction='column'>
+                                                                <Text fz='xs'>Max</Text>
+                                                                <Text fz='xl' fw={600}>{selectedTask?.mhs?.max?.toFixed(0) || 0} Hr</Text>
+                                                            </Flex>
+                                                            <IconClockUp color="red" size='25' />
+                                                        </Group>
+                                                    </Card>
+                                                    <Card bg='#f3f7da' shadow="0" radius='md'>
+                                                        <Group justify="space-between" align="start">
+                                                            <Flex direction='column'>
+                                                                <Text fz='xs'>Avg</Text>
+                                                                <Text fz='xl' fw={600}>{selectedTask?.mhs?.avg?.toFixed(0) || 0} Hr</Text>
+                                                            </Flex>
+                                                            <IconClockCode color="orange" size='25' />
+                                                        </Group>
+                                                    </Card> */}
+                                                    <Card bg='#daf7de' shadow="0" radius='md'>
+                                                        <Group justify="space-between" align="start">
+                                                            <Flex direction='column'>
+                                                                <Text fz='xs'>Man Hours</Text>
+                                                                <Text fz='xl' fw={600}>{selectedTask?.estimatedHours?.toFixed(1) || 0} Hr</Text>
+                                                            </Flex>
+                                                            <IconClockHour4 color="green" size='25' />
+                                                        </Group>
+                                                    </Card>
+                                                    <Card bg='#f3f7da' shadow="0" radius='md'>
+                                                        <Group justify="space-between" align="start">
+                                                            <Flex direction='column'>
+                                                                <Text fz='xs'>Skill</Text>
+                                                                <Text fz='xl' fw={600}>{selectedTask?.skillLevel || "-"}</Text>
+                                                            </Flex>
+                                                            <IconUserCog color="orange" size='25' />
+                                                        </Group>
+                                                    </Card>
+                                                    
+                                                </SimpleGrid>
+                                                <Space h='sm' />
+                                                {/* <Grid>
+                                                    <Grid.Col span={2}>
+                                                        <Text size="md" fw={500} c="dimmed">
+                                                            Skill:
+                                                        </Text>
+                                                    </Grid.Col>
+                                                    <Grid.Col span={9}>
+                                                        <Badge color="cyan" size="md" radius="lg">
+                                                            {selectedTask?.skillLevel || "-"}
+                                                        </Badge>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Space h='sm' /> */}
+                                                {/* <Grid>
+                                                    <Grid.Col span={3}>
+                                                        <Text size="md" fw={500} c="dimmed">
+                                                            Tools Required:
+                                                        </Text>
+                                                    </Grid.Col>
+                                                    <Grid.Col span={9}>
+                                                        <Group gap="xs" wrap="wrap">
+                                                            {selectedTask?.toolsRequired?.map((tool: string, index: number) => (
+                                                                <Badge variant="light" key={index} color="blue" size="sm" radius="sm">
+                                                                    {tool}
+                                                                </Badge>
+                                                            )) || "-"}
+                                                        </Group>
+                                                    </Grid.Col>
+                                                </Grid> */}
+                                            </>
+                                        ) : (
+                                            <Text size="md" fw={500} c="dimmed" ta="center">
+                                                Select a task to view details
+                                            </Text>
+                                        )}
+                                    </>
+                                ) : (
+                                    <Text size="md" fw={500} c="dimmed" ta="center">
+                                        Select an access point to view details
+                                    </Text>
+                                )}
+                            </div>
+                        </Card>
+                    </Grid.Col>
+                </Grid>
+            </Card>
+        </>
+    );
+};
+
+// const accessPointData = [
+//     {
+//         "name": "Access Point 1",
+//         "tasks": [
+//             {
+//                 "taskId": "Task - 1",
+//                 "desc": "Description for Task 1",
+//                 "zone": "Zone - B"
+//             },
+//             {
+//                 "taskId": "Task - 2",
+//                 "desc": "Description for Task 2",
+//                 "zone": "Zone - C"
+//             },
+//             {
+//                 "taskId": "Task - 3",
+//                 "desc": "Description for Task 2",
+//                 "zone": "Zone - D"
+//             }
+//         ]
+//     },
+//     {
+//         "name": "Access Point 2",
+//         "tasks": [
+//             {
+//                 "taskId": "Task - 3",
+//                 "desc": "Description for Task 1",
+//                 "zone": "Zone - B"
+//             },
+//             {
+//                 "taskId": "Task - 4",
+//                 "desc": "Description for Task 2",
+//                 "zone": "Zone - C"
+//             },
+//             {
+//                 "taskId": "Task - 6",
+//                 "desc": "Description for Task 2",
+//                 "zone": "Zone - C"
+//             },
+//             {
+//                 "taskId": "Task - 8",
+//                 "desc": "Description for Task 2",
+//                 "zone": "Zone - D"
+//             }
+//         ]
+//     },
+//     {
+//         "name": "Access Point 3",
+//         "tasks": [
+//             {
+//                 "taskId": "Task - 5",
+//                 "desc": "Description for Task 1",
+//                 "zone": "Zone - B"
+//             },
+//         ]
+//     }
+// ];
 // RFQ PARAMETRS OLD
 {/* 
     <Card withBorder h="60vh" radius="md">

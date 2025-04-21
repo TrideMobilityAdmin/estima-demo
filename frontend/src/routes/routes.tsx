@@ -10,24 +10,6 @@ import { useEffect } from "react";
 import EstimateNew from "../views/estimateNew";
 
 const MainRoutes = () => {
-  // const location = useLocation();
-  // const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   // Prevent navigating back to restricted pages after logout
-  //   if (location.pathname === "/") {
-  //     window.history.pushState(null, "", window.location.href);
-  //     window.addEventListener("popstate", () => {
-  //       window.history.pushState(null, "", window.location.href);
-  //     });
-  //   }
-
-  //   return () => {
-  //     window.removeEventListener("popstate", () => {
-  //       window.history.pushState(null, "", window.location.href);
-  //     });
-  //   };
-  // }, [location]);
   return (
     <Routes>
       <Route path="/" element={<Login />} />

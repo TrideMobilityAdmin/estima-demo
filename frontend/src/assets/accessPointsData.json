@@ -1,0 +1,326 @@
+[
+    {
+      "name": "Forward Cargo Door",
+      "location": "Forward Cargo Hold",
+      "aircraft": "Boeing 737-800",
+      "panelNumber": "FC-001",
+      "tasks": [
+        {
+          "taskId": "B737-FC-001",
+          "desc": "Inspect cargo door locking mechanism for wear and proper operation",
+          "zone": "Zone 111",
+          "interval": "600FH",
+          "estimatedHours": 1.5,
+          "skillLevel": "Level 2",
+          "toolsRequired": ["Inspection light", "Bore scope", "Calibration gauge"]
+        },
+        {
+          "taskId": "B737-FC-002",
+          "desc": "Lubricate cargo door hinges and actuator points",
+          "zone": "Zone 111",
+          "interval": "300FH",
+          "estimatedHours": 1.0,
+          "skillLevel": "Level 1",
+          "toolsRequired": ["Grease gun", "Cleaning solvent", "Lint-free cloth"]
+        },
+        {
+          "taskId": "B737-FC-003",
+          "desc": "Test cargo door warning system and indicators",
+          "zone": "Zone 111",
+          "interval": "1200FH",
+          "estimatedHours": 2.0,
+          "skillLevel": "Level 3",
+          "toolsRequired": ["Multimeter", "Test harness", "Logic probe"]
+        }
+      ]
+    },
+    {
+      "name": "APU Access Panel",
+      "location": "Tail Section",
+      "aircraft": "Boeing 737-800",
+      "panelNumber": "TS-042",
+      "tasks": [
+        {
+          "taskId": "B737-APU-001",
+          "desc": "Inspect APU inlet and exhaust for foreign object damage or obstruction",
+          "zone": "Zone 300",
+          "interval": "400FH",
+          "estimatedHours": 1.0,
+          "skillLevel": "Level 2",
+          "toolsRequired": ["Borescope", "Inspection mirror", "Flashlight"]
+        },
+        {
+          "taskId": "B737-APU-002",
+          "desc": "Check APU oil level and replenish if necessary",
+          "zone": "Zone 300",
+          "interval": "200FH",
+          "estimatedHours": 0.5,
+          "skillLevel": "Level 1",
+          "toolsRequired": ["Oil dipstick", "Funnel", "APU oil"]
+        },
+        {
+          "taskId": "B737-APU-003",
+          "desc": "Perform operational test of APU start sequence and monitor parameters",
+          "zone": "Zone 300",
+          "interval": "800FH",
+          "estimatedHours": 2.5,
+          "skillLevel": "Level 3",
+          "toolsRequired": ["Diagnostic computer", "Parameter logger", "Headset"]
+        },
+        {
+          "taskId": "B737-APU-004",
+          "desc": "Replace APU fuel filter",
+          "zone": "Zone 300",
+          "interval": "2400FH",
+          "estimatedHours": 3.0,
+          "skillLevel": "Level 2",
+          "toolsRequired": ["Filter wrench", "Torque wrench", "Replacement filter"]
+        }
+      ]
+    },
+    {
+      "name": "Wing Leading Edge Access",
+      "location": "Left Wing",
+      "aircraft": "Boeing 737-800",
+      "panelNumber": "WL-023",
+      "tasks": [
+        {
+          "taskId": "B737-WL-001",
+          "desc": "Inspect slat tracks and carriages for wear or damage",
+          "zone": "Zone 500",
+          "interval": "1200FH",
+          "estimatedHours": 4.0,
+          "skillLevel": "Level 3",
+          "toolsRequired": ["Inspection mirror", "Measuring calipers", "Wear gauge"]
+        },
+        {
+          "taskId": "B737-WL-002",
+          "desc": "Check anti-ice ducts for leaks or damage",
+          "zone": "Zone 500",
+          "interval": "600FH",
+          "estimatedHours": 2.0,
+          "skillLevel": "Level 2",
+          "toolsRequired": ["Pressure tester", "Leak detection solution", "Inspection light"]
+        }
+      ]
+    },
+    {
+      "name": "Main Landing Gear Bay",
+      "location": "Center Fuselage",
+      "aircraft": "Boeing 737-800",
+      "panelNumber": "MLG-007",
+      "tasks": [
+        {
+          "taskId": "B737-MLG-001",
+          "desc": "Inspect landing gear strut for proper extension and hydraulic leaks",
+          "zone": "Zone 700",
+          "interval": "500FH",
+          "estimatedHours": 1.5,
+          "skillLevel": "Level 2",
+          "toolsRequired": ["Measuring tape", "Inspection mirror", "Flashlight"]
+        },
+        {
+          "taskId": "B737-MLG-002",
+          "desc": "Check brake wear indicators and replace brake pads if necessary",
+          "zone": "Zone 700",
+          "interval": "As required",
+          "estimatedHours": 3.0,
+          "skillLevel": "Level 2",
+          "toolsRequired": ["Brake wear gauge", "Socket set", "Torque wrench"]
+        },
+        {
+          "taskId": "B737-MLG-003",
+          "desc": "Lubricate landing gear pivot points and bearings",
+          "zone": "Zone 700",
+          "interval": "400FH",
+          "estimatedHours": 2.0,
+          "skillLevel": "Level 1",
+          "toolsRequired": ["Grease gun", "Wiping cloths", "Specified lubricant"]
+        },
+        {
+          "taskId": "B737-MLG-004",
+          "desc": "Inspect hydraulic lines and connections for damage or leaks",
+          "zone": "Zone 700",
+          "interval": "600FH",
+          "estimatedHours": 1.0,
+          "skillLevel": "Level 2",
+          "toolsRequired": ["Inspection mirror", "Flashlight", "Leak detection fluid"]
+        }
+      ]
+    },
+    {
+      "name": "Avionics Bay Access",
+      "location": "Forward Electronics Bay",
+      "aircraft": "Boeing 737-800",
+      "panelNumber": "AV-101",
+      "tasks": [
+        {
+          "taskId": "B737-AV-001",
+          "desc": "Inspect cooling fans for proper operation and foreign object damage",
+          "zone": "Zone 120",
+          "interval": "800FH",
+          "estimatedHours": 1.0,
+          "skillLevel": "Level 2",
+          "toolsRequired": ["Tachometer", "Inspection mirror", "Cleaning brush"]
+        },
+        {
+          "taskId": "B737-AV-002",
+          "desc": "Check electrical connectors for security and corrosion",
+          "zone": "Zone 120",
+          "interval": "1200FH",
+          "estimatedHours": 2.5,
+          "skillLevel": "Level 3",
+          "toolsRequired": ["Inspection light", "Multimeter", "Contact cleaner"]
+        },
+        {
+          "taskId": "B737-AV-003",
+          "desc": "Test smoke detection system in avionics bay",
+          "zone": "Zone 120",
+          "interval": "2400FH",
+          "estimatedHours": 1.5,
+          "skillLevel": "Level 3",
+          "toolsRequired": ["Test kit", "Smoke generator", "Diagnostic computer"]
+        }
+      ]
+    },
+    {
+      "name": "Hydraulic Service Panel",
+      "location": "Right Wing Root",
+      "aircraft": "Boeing 737-800",
+      "panelNumber": "HYD-054",
+      "tasks": [
+        {
+          "taskId": "B737-HYD-001",
+          "desc": "Check hydraulic fluid level and replenish if necessary",
+          "zone": "Zone 400",
+          "interval": "300FH",
+          "estimatedHours": 0.5,
+          "skillLevel": "Level 1",
+          "toolsRequired": ["Hydraulic fluid", "Funnel", "Clean cloth"]
+        },
+        {
+          "taskId": "B737-HYD-002",
+          "desc": "Take hydraulic fluid sample for contamination analysis",
+          "zone": "Zone 400",
+          "interval": "1200FH",
+          "estimatedHours": 0.5,
+          "skillLevel": "Level 2",
+          "toolsRequired": ["Sampling kit", "Sampling bottle", "Analysis labels"]
+        },
+        {
+          "taskId": "B737-HYD-003",
+          "desc": "Pressure test hydraulic system and check for leaks",
+          "zone": "Zone 400",
+          "interval": "2400FH",
+          "estimatedHours": 3.0,
+          "skillLevel": "Level 3",
+          "toolsRequired": ["Pressure tester", "Leak detection fluid", "Pressure gauge"]
+        }
+      ]
+    },
+    {
+      "name": "Engine Fan Cowl",
+      "location": "Left Engine",
+      "aircraft": "Boeing 737-800",
+      "panelNumber": "ENG-L-001",
+      "tasks": [
+        {
+          "taskId": "B737-ENG-001",
+          "desc": "Inspect fan blades for FOD damage, cracks or delamination",
+          "zone": "Zone 450",
+          "interval": "400FH",
+          "estimatedHours": 2.0,
+          "skillLevel": "Level 3",
+          "toolsRequired": ["Borescope", "Inspection mirror", "Flashlight"]
+        },
+        {
+          "taskId": "B737-ENG-002",
+          "desc": "Check engine oil level and replenish if necessary",
+          "zone": "Zone 450",
+          "interval": "Daily check",
+          "estimatedHours": 0.5,
+          "skillLevel": "Level 1",
+          "toolsRequired": ["Engine oil", "Funnel", "Wiping cloth"]
+        },
+        {
+          "taskId": "B737-ENG-003",
+          "desc": "Inspect engine cowl latches for security and proper operation",
+          "zone": "Zone 450",
+          "interval": "600FH",
+          "estimatedHours": 1.0,
+          "skillLevel": "Level 2",
+          "toolsRequired": ["Inspection light", "Cowl latch tool", "Lubricating oil"]
+        },
+        {
+          "taskId": "B737-ENG-004",
+          "desc": "Test engine fire detection system",
+          "zone": "Zone 450",
+          "interval": "1200FH",
+          "estimatedHours": 2.0,
+          "skillLevel": "Level 3",
+          "toolsRequired": ["Test harness", "Diagnostic computer", "Multimeter"]
+        }
+      ]
+    },
+    {
+      "name": "Cabin Door Access",
+      "location": "Forward Passenger Door",
+      "aircraft": "Boeing 737-800",
+      "panelNumber": "PAX-001",
+      "tasks": [
+        {
+          "taskId": "B737-PAX-001",
+          "desc": "Inspect door seals for damage and proper inflation",
+          "zone": "Zone 200",
+          "interval": "600FH",
+          "estimatedHours": 1.0,
+          "skillLevel": "Level 2",
+          "toolsRequired": ["Inspection mirror", "Flashlight", "Pressure gauge"]
+        },
+        {
+          "taskId": "B737-PAX-002",
+          "desc": "Check emergency slide pack attachment and indicators",
+          "zone": "Zone 200",
+          "interval": "1200FH",
+          "estimatedHours": 2.0,
+          "skillLevel": "Level 3",
+          "toolsRequired": ["Inspection mirror", "Pressure gauge", "Safety pins"]
+        },
+        {
+          "taskId": "B737-PAX-003",
+          "desc": "Lubricate door mechanism and check for smooth operation",
+          "zone": "Zone 200",
+          "interval": "400FH",
+          "estimatedHours": 1.5,
+          "skillLevel": "Level 2",
+          "toolsRequired": ["Lubricant", "Grease gun", "Wiping cloths"]
+        }
+      ]
+    },
+    {
+      "name": "Flight Control Access Panel",
+      "location": "Vertical Stabilizer",
+      "aircraft": "Boeing 737-800",
+      "panelNumber": "VS-201",
+      "tasks": [
+        {
+          "taskId": "B737-VS-001",
+          "desc": "Inspect rudder control cables for tension and wear",
+          "zone": "Zone 600",
+          "interval": "1200FH",
+          "estimatedHours": 3.0,
+          "skillLevel": "Level 3",
+          "toolsRequired": ["Tensiometer", "Inspection mirror", "Flashlight"]
+        },
+        {
+          "taskId": "B737-VS-002",
+          "desc": "Check rudder actuator for hydraulic leaks and proper attachment",
+          "zone": "Zone 600",
+          "interval": "800FH",
+          "estimatedHours": 2.0,
+          "skillLevel": "Level 2",
+          "toolsRequired": ["Inspection mirror", "Torque wrench", "Leak detection fluid"]
+        }
+      ]
+    }
+  ]
