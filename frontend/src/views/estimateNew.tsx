@@ -36,7 +36,7 @@ import {
 } from "../constants/GlobalImports";
 import { AreaChart } from "@mantine/charts";
 import '../App.css';
-import { IconChartArcs3, IconCheck, IconChecklist, IconChevronDown, IconChevronUp, IconCircleCheck, IconClipboard, IconClipboardCheck, IconClock, IconClockCheck, IconClockCode, IconClockDown, IconClockHour4, IconClockHour5, IconClockShare, IconClockUp, IconDeselect, IconDownload, IconError404, IconFile, IconFileCheck, IconFileDownload, IconHourglass, IconListCheck, IconListDetails, IconLoader, IconMapPin, IconMessage, IconMessage2Plus, IconMinimize, IconPercentage, IconPercentage66, IconPin, IconPlane, IconPlaneTilt, IconPlus, IconRecycle, IconReport, IconRowRemove, IconSettingsDollar, IconShadow, IconSquareCheck, IconStatusChange, IconTools, IconTrash, IconUserCog, IconX } from "@tabler/icons-react";
+import { IconChartArcs3, IconCheck, IconChecklist, IconChevronDown, IconChevronUp, IconCircleCheck, IconClipboard, IconClipboardCheck, IconClock, IconClockCheck, IconClockCode, IconClockDown, IconClockHour4, IconClockHour5, IconClockShare, IconClockUp, IconDeselect, IconDownload, IconError404, IconFile, IconFileCheck, IconFileDownload, IconFileTime, IconHourglass, IconListCheck, IconListDetails, IconLoader, IconMapPin, IconMessage, IconMessage2Plus, IconMinimize, IconPercentage, IconPercentage66, IconPin, IconPinEnd, IconPlane, IconPlaneTilt, IconPlus, IconRecycle, IconReport, IconRowRemove, IconSettingsDollar, IconShadow, IconSquareCheck, IconStatusChange, IconTools, IconTrash, IconUserCog, IconX } from "@tabler/icons-react";
 import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
 import 'ag-grid-community/styles/ag-grid.css';
@@ -2465,8 +2465,8 @@ border-bottom: none;
                                                     {
                                                         tabValue === 'overall' ? ("Overall Estimate Report")
                                                             : tabValue === 'finding' ? ("Findings Report")
-                                                            : tabValue === 'mpd' ? ("MPD Report")
-                                                            : ("MPD (Standard) Report")
+                                                                : tabValue === 'mpd' ? ("MPD Report")
+                                                                    : ("MPD (Standard) Report")
                                                     }
                                                     {/* Overall Estimate Report */}
                                                 </Title>
@@ -2532,7 +2532,7 @@ border-bottom: none;
                                                         </>
                                                     ) : (
                                                         <>
-                                                        <OverallMPDStandardReport
+                                                            <OverallMPDStandardReport
                                                                 totalTATTime={estimateReportData?.aggregatedTasks?.estimatedTatTime || 0}
                                                                 estimatedManHrs={estimateReportData?.aggregatedTasks?.estimateManhrs || {}}
                                                                 estimatedSparesCost={estimateReportData?.aggregatedTasks?.estimatedSpareCost || 0}
@@ -2567,12 +2567,15 @@ border-bottom: none;
                                         }
                                         {
                                             tabValue === 'mpdStandard' || tabValue === 'overall' ? (
+                                                <>
                                                 <AccessPointsWise accessPointData={accessPointData} />
+                                                <PrepManHours accessPointData={accessPointData} />
+                                                </>
                                             ) : (
                                                 <></>
                                             )
                                         }
-                                        
+
                                     </>
                                 ) : (
                                     <></>
@@ -3391,27 +3394,62 @@ const OverallMPDStandardReport: React.FC<TATDashboardProps> = ({
             <Grid gutter="xs">
                 {/* Left Section - Estimate Overview */}
                 <Grid.Col span={3}>
-                    <Card withBorder radius="md" p="xs" h="100%">
+                    {/* <Card withBorder radius="md" p="xs" h="100%"> */}
                         {/* <Title order={5} mb="md" fw={500} c="dimmed">Estimate Overview</Title> */}
 
                         {/* Estimated Man Hours */}
-                        <Card withBorder radius="md" p="md" mb="md" bg="gray.0">
-                            <Text size="sm" fw={500} c="dimmed" mb="md">
-                                Estimated Man Hours
-                            </Text>
+                        <Card withBorder radius="md" p="md" mb="md"  h='100%'>
+                        <Title order={5} mb="md" fw={500} c="dimmed">Total Man Hours</Title>
+                            <Card withBorder radius="md" p="xs" bg="green.0">
+                                <Group gap="md">
+                                    <ThemeIcon variant="light" radius="md" size={50} color="green.8">
+                                        <IconReport size={28} />
+                                    </ThemeIcon>
+                                    <Flex direction="column">
+                                        <Text size="sm" fw={500} c="dimmed">
+                                            Tasks MH
+                                        </Text>
+                                        <Text size="xl" fw={700} c="green.8">
+                                            666 Hrs
+                                        </Text>
+                                    </Flex>
+                                </Group>
+                            </Card>
+                            <Space h='sm'/>
+                            <Card withBorder radius="md" p="xs" bg="lime.0">
+                                <Group gap="md">
+                                    <ThemeIcon variant="light" radius="md" size={50} color="lime.6">
+                                        <IconPinEnd size={28} />
+                                    </ThemeIcon>
+                                    <Flex direction="column">
+                                        <Text size="sm" fw={500} c="dimmed">
+                                            Access MH
+                                        </Text>
+                                        <Text size="xl" fw={700} c="lime.6">
+                                            666 Hrs
+                                        </Text>
+                                    </Flex>
+                                </Group>
+                            </Card>
+                            <Space h='sm'/>
+                            <Card withBorder radius="md" p="xs" bg="teal.0">
+                                <Group gap="md">
+                                    <ThemeIcon variant="light" radius="md" size={50} color="teal.6">
+                                        <IconFileTime size={28} />
+                                    </ThemeIcon>
+                                    <Flex direction="column">
+                                        <Text size="sm" fw={500} c="dimmed">
+                                            Prep MH
+                                        </Text>
+                                        <Text size="xl" fw={700} c="teal.6">
+                                            666 Hrs
+                                        </Text>
+                                    </Flex>
+                                </Group>
+                            </Card>
                             <Flex gap="md" direction="column">
-                                {/* {Object.entries(estimatedManHrs || {}).map(([key, value]: any) => {
-                                    // Determine color based on key
-                                    const color = key === "min" ? "teal.6" :
-                                        key === "max" ? "blue.6" :
-                                            key === "avg" ? "teal.6" :
-                                                "green.6";
 
-                                    // Format the label
-                                    const label = key.charAt(0).toUpperCase() + key.slice(1);
-
-                                    return ( */}
-                                        <Box >
+                                {/* <Box >
                                             <Group justify="space-between" mb={5}>
                                                 <Text fz="xs" fw={500}>Task Man Hrs</Text>
                                                 <Text fz="sm" fw={600} c='green.6'>
@@ -3424,8 +3462,8 @@ const OverallMPDStandardReport: React.FC<TATDashboardProps> = ({
                                                 size="md"
                                                 radius="sm"
                                             />
-                                        </Box>
-                                        <Box >
+                                        </Box> */}
+                                {/* <Box >
                                             <Group justify="space-between" mb={5}>
                                                 <Text fz="xs" fw={500}>Access Man Hrs</Text>
                                                 <Text fz="sm" fw={600} c='blue.6'>
@@ -3438,8 +3476,8 @@ const OverallMPDStandardReport: React.FC<TATDashboardProps> = ({
                                                 size="md"
                                                 radius="sm"
                                             />
-                                        </Box>
-                                        <Box >
+                                        </Box> */}
+                                {/* <Box >
                                             <Group justify="space-between" mb={5}>
                                                 <Text fz="xs" fw={500}>Prep Man Hrs</Text>
                                                 <Text fz="sm" fw={600} c='teal.6'>
@@ -3452,11 +3490,10 @@ const OverallMPDStandardReport: React.FC<TATDashboardProps> = ({
                                                 size="md"
                                                 radius="sm"
                                             />
-                                        </Box>
-                                {/* //     );
-                                // })} */}
+                                        </Box> */}
+
                             </Flex>
-                        </Card>
+                        {/* </Card> */}
 
                         {/* Unbillable Cost */}
                         {/* <Card withBorder radius="md" p="xs" mb="md" bg="blue.0">
@@ -5377,7 +5414,7 @@ const AccessPointsWise: React.FC<any> = ({ accessPointData }) => {
         <>
             {/* Header */}
             <Card p={10} c="white" bg="#124076" style={{ cursor: 'pointer' }}>
-                <Text size="lg" fw={600}>Access Point Details</Text>
+                <Text size="lg" fw={600}>Access Pannel</Text>
             </Card>
 
             {/* Main Grid Layout */}
@@ -5736,7 +5773,461 @@ const AccessPointsWise: React.FC<any> = ({ accessPointData }) => {
                                                             <IconUserCog color="orange" size='25' />
                                                         </Group>
                                                     </Card>
-                                                    
+
+                                                </SimpleGrid>
+                                                <Space h='sm' />
+                                                {/* <Grid>
+                                                    <Grid.Col span={2}>
+                                                        <Text size="md" fw={500} c="dimmed">
+                                                            Skill:
+                                                        </Text>
+                                                    </Grid.Col>
+                                                    <Grid.Col span={9}>
+                                                        <Badge color="cyan" size="md" radius="lg">
+                                                            {selectedTask?.skillLevel || "-"}
+                                                        </Badge>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Space h='sm' /> */}
+                                                {/* <Grid>
+                                                    <Grid.Col span={3}>
+                                                        <Text size="md" fw={500} c="dimmed">
+                                                            Tools Required:
+                                                        </Text>
+                                                    </Grid.Col>
+                                                    <Grid.Col span={9}>
+                                                        <Group gap="xs" wrap="wrap">
+                                                            {selectedTask?.toolsRequired?.map((tool: string, index: number) => (
+                                                                <Badge variant="light" key={index} color="blue" size="sm" radius="sm">
+                                                                    {tool}
+                                                                </Badge>
+                                                            )) || "-"}
+                                                        </Group>
+                                                    </Grid.Col>
+                                                </Grid> */}
+                                            </>
+                                        ) : (
+                                            <Text size="md" fw={500} c="dimmed" ta="center">
+                                                Select a task to view details
+                                            </Text>
+                                        )}
+                                    </>
+                                ) : (
+                                    <Text size="md" fw={500} c="dimmed" ta="center">
+                                        Select an access point to view details
+                                    </Text>
+                                )}
+                            </div>
+                        </Card>
+                    </Grid.Col>
+                </Grid>
+            </Card>
+        </>
+    );
+};
+
+const PrepManHours: React.FC<any> = ({ accessPointData }) => {
+    const [selectedAccessPoint, setSelectedAccessPoint] = useState<any>(null);
+    const [selectedTask, setSelectedTask] = useState<any>(null);
+    const [accessPointSearch, setAccessPointSearch] = useState<string>('');
+    const [taskSearch, setTaskSearch] = useState<string>('');
+
+    // Filtered Access Points based on search input
+    const filteredAccessPoints = accessPointData.filter((ap: any) =>
+        ap.name.toLowerCase().includes(accessPointSearch.toLowerCase())
+    );
+
+    // Filtered Tasks based on search input
+    const filteredTasks = selectedAccessPoint?.tasks.filter((task: any) =>
+        task.taskId.toLowerCase().includes(taskSearch.toLowerCase())
+    ) || [];
+
+    // Function to handle access point selection
+    const handleAccessPointSelect = (ap: any) => {
+        setSelectedAccessPoint(ap);
+
+        // Auto-select the first task if tasks exist and filter matches
+        if (ap.tasks && ap.tasks.length > 0) {
+            // Apply task search filter if exists
+            const filteredTasks = ap.tasks.filter((task: any) =>
+                task.taskId.toLowerCase().includes(taskSearch.toLowerCase())
+            );
+
+            // Select the first task from filtered results if available
+            if (filteredTasks.length > 0) {
+                setSelectedTask(filteredTasks[0]);
+            } else {
+                setSelectedTask(null);
+            }
+        } else {
+            setSelectedTask(null);
+        }
+    };
+
+    return (
+        <>
+            {/* Header */}
+            <Card p={10} c="white" bg="#124076" style={{ cursor: 'pointer' }}>
+                <Text size="lg" fw={600}>Prep Man Hours</Text>
+            </Card>
+
+            {/* Main Grid Layout */}
+            <Card withBorder p={0} h="80vh" bg="none">
+                <Space h="xs" />
+                <Grid h="100%">
+
+                    {/* Left Column: Access Points */}
+                    <Grid.Col span={3}>
+                        <Card h="100%" w="100%" p="md" bg="none">
+                            <Group>
+                                <Text size="md" fw={500} c="dimmed">Access Points</Text>
+                                <Text size="md" fw={500}>{filteredAccessPoints.length}</Text>
+                            </Group>
+
+                            <TextInput
+                                placeholder="Search access points..."
+                                value={accessPointSearch}
+                                onChange={(e) => setAccessPointSearch(e.target.value)}
+                                mb="md"
+                            />
+
+                            <ScrollArea
+                                h="calc(80vh - 150px)"
+                                offsetScrollbars
+                                scrollbarSize={6}
+                                type="scroll"
+                                styles={{
+                                    viewport: {
+                                        overflowX: 'hidden' // Disable horizontal scrolling explicitly
+                                    }
+                                }}
+                            >
+                                <div style={{ width: '100%', maxWidth: '100%' }}>
+                                    {filteredAccessPoints.map((ap: any, index: any) => (
+                                        <Badge
+                                            key={index}
+                                            variant={selectedAccessPoint === ap ? 'filled' : "light"}
+                                            color="#4C7B8B"
+                                            size="lg"
+                                            mb="md"
+                                            h={35}
+                                            radius="md"
+                                            onClick={() => handleAccessPointSelect(ap)}
+                                            styles={{
+                                                root: {
+                                                    maxWidth: '100%',
+                                                    width: '100%',
+                                                    textAlign: 'center',
+                                                    paddingLeft: '4px',
+                                                    paddingRight: '4px',
+                                                    boxSizing: 'border-box'
+                                                },
+                                            }}
+                                        >
+                                            <Tooltip label={ap.name} position="right" withinPortal>
+                                                <div style={{
+                                                    width: '100%',
+                                                    overflow: 'hidden',
+                                                    textOverflow: 'ellipsis',
+                                                    whiteSpace: 'nowrap',
+                                                    display: 'block'
+                                                }}>
+                                                    <Text fw={500} style={{
+                                                        display: 'inline-block',
+                                                        maxWidth: '100%',
+                                                        overflow: 'hidden',
+                                                        textOverflow: 'ellipsis',
+                                                        whiteSpace: 'nowrap'
+                                                    }}>
+                                                        {ap.name}
+                                                    </Text>
+                                                </div>
+                                            </Tooltip>
+                                        </Badge>
+                                    ))}
+                                </div>
+                            </ScrollArea>
+                        </Card>
+                    </Grid.Col>
+
+                    {/* Middle Column: Selected Access Point's Tasks */}
+                    <Grid.Col span={3}>
+                        <Card h="100%" w="100%" p="md" bg="none">
+                            <Group>
+                                <Text size="md" fw={500} c="dimmed">Tasks for</Text>
+                                <Text size="md" fw={500} style={{
+                                    maxWidth: 'calc(100% - 80px)',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    whiteSpace: 'nowrap'
+                                }}>
+                                    {selectedAccessPoint ? selectedAccessPoint.name : 'Selected Access Point'}
+                                </Text>
+                            </Group>
+
+                            <TextInput
+                                placeholder="Search tasks..."
+                                value={taskSearch}
+                                onChange={(e) => {
+                                    setTaskSearch(e.target.value);
+                                    // Reapply auto-selection after search changes
+                                    if (selectedAccessPoint) {
+                                        const newFilteredTasks = selectedAccessPoint.tasks.filter((task: any) =>
+                                            task.taskId.toLowerCase().includes(e.target.value.toLowerCase())
+                                        );
+                                        if (newFilteredTasks.length > 0) {
+                                            setSelectedTask(newFilteredTasks[0]);
+                                        } else {
+                                            setSelectedTask(null);
+                                        }
+                                    }
+                                }}
+                                mb="md"
+                                disabled={!selectedAccessPoint}
+                            />
+
+                            <ScrollArea
+                                h="calc(80vh - 150px)"
+                                offsetScrollbars
+                                scrollbarSize={6}
+                                type="scroll"
+                                styles={{
+                                    viewport: {
+                                        overflowX: 'hidden' // Disable horizontal scrolling explicitly
+                                    }
+                                }}
+                            >
+                                <div style={{ width: '100%', maxWidth: '100%' }}>
+                                    {filteredTasks.map((task: any, index: any) => (
+                                        <Tooltip key={index} label={`Zone: ${task.zone}`} position="right" withinPortal>
+                                            <Badge
+                                                variant={selectedTask === task ? 'filled' : "light"}
+                                                color="#4C7B8B"
+                                                size="lg"
+                                                mb="md"
+                                                h={35}
+                                                radius="md"
+                                                onClick={() => setSelectedTask(task)}
+                                                styles={{
+                                                    root: {
+                                                        maxWidth: '100%',
+                                                        width: '100%',
+                                                        textAlign: 'center',
+                                                        paddingLeft: '4px',
+                                                        paddingRight: '4px',
+                                                        boxSizing: 'border-box'
+                                                    },
+                                                }}
+                                            >
+                                                <div style={{
+                                                    width: '100%',
+                                                    overflow: 'hidden',
+                                                    textOverflow: 'ellipsis',
+                                                    whiteSpace: 'nowrap',
+                                                    display: 'block'
+                                                }}>
+                                                    <Text fw={500} style={{
+                                                        display: 'inline-block',
+                                                        maxWidth: '100%',
+                                                        overflow: 'hidden',
+                                                        textOverflow: 'ellipsis',
+                                                        whiteSpace: 'nowrap'
+                                                    }}>
+                                                        {task.taskId}
+                                                    </Text>
+                                                </div>
+                                            </Badge>
+                                        </Tooltip>
+                                    ))}
+                                </div>
+                            </ScrollArea>
+                        </Card>
+                    </Grid.Col>
+
+                    {/* Right Column: Details Panel (Access Point + Task Details) */}
+                    <Grid.Col span={6}>
+                        <Card
+                            radius="xl"
+                            h="100%"
+                            w="100%"
+                            shadow="sm"
+                            p="md"
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                overflow: 'hidden'
+                            }}
+                        >
+                            <Space h="lg" />
+                            <div
+                                style={{
+                                    flex: 1,
+                                    overflowY: 'auto',
+                                    scrollbarWidth: 'none',
+                                    maxHeight: 'calc(70vh - 50px)',
+                                }}
+                            >
+                                {selectedAccessPoint ? (
+                                    <>
+                                        {/* Access Point Details Section */}
+                                        <Group justify="space-between">
+                                            <Text fw={600}>Access Point Information</Text>
+                                            <Card bg='#e7f5ff' shadow="0" p={5} radius='md'>
+                                                <Group gap='xs'>
+                                                    <ThemeIcon variant="light" radius="md" size="md">
+                                                        <IconMapPin style={{ width: '70%', height: '70%' }} />
+                                                    </ThemeIcon>
+                                                    <Text fw={600}>{selectedTask?.zone || "-"}</Text>
+                                                </Group>
+                                                {/* {selectedTask?.zone || "-"} */}
+                                            </Card>
+                                        </Group>
+
+                                        <Space h='sm' />
+                                        <SimpleGrid cols={2} spacing="md">
+                                            <Card bg='#e7f5ff' shadow="0" radius='md'>
+                                                <Group justify="space-between" align="start">
+                                                    <Flex direction='column'>
+                                                        <Text fz='xs' c="dimmed">Name</Text>
+                                                        <Text fz='lg' fw={600}>{selectedAccessPoint?.name || "-"}</Text>
+                                                    </Flex>
+                                                </Group>
+                                            </Card>
+                                            <Card bg='#e7f5ff' shadow="0" radius='md'>
+                                                <Group justify="space-between" align="start">
+                                                    <Flex direction='column'>
+                                                        <Text fz='xs' c="dimmed">Location</Text>
+                                                        <Text fz='lg' fw={600}>{selectedAccessPoint?.location || "-"}</Text>
+                                                    </Flex>
+                                                </Group>
+                                            </Card>
+                                            <Card bg='#e7f5ff' shadow="0" radius='md'>
+                                                <Group justify="space-between" align="start">
+                                                    <Flex direction='column'>
+                                                        <Text fz='xs' c="dimmed">Aircraft</Text>
+                                                        <Text fz='lg' fw={600}>{selectedAccessPoint?.aircraft || "-"}</Text>
+                                                    </Flex>
+                                                </Group>
+                                            </Card>
+                                            <Card bg='#e7f5ff' shadow="0" radius='md'>
+                                                <Group justify="space-between" align="start">
+                                                    <Flex direction='column'>
+                                                        <Text fz='xs' c="dimmed">Panel Number</Text>
+                                                        <Text fz='lg' fw={600}>{selectedAccessPoint?.panelNumber || "-"}</Text>
+                                                    </Flex>
+                                                </Group>
+                                            </Card>
+                                        </SimpleGrid>
+
+                                        <Divider my="md" />
+
+                                        {/* Task Details Section */}
+                                        {selectedTask ? (
+                                            <>
+                                                <Text fw={600}>Selected Task Details</Text>
+                                                {/* <Space h='sm' />
+                                                <Grid>
+                                                    <Grid.Col span={3}>
+                                                        <Text size="md" fw={500} c="dimmed">
+                                                            Zone:
+                                                        </Text>
+                                                    </Grid.Col>
+                                                    <Grid.Col span={9}>
+                                                        <Badge color="cyan" size="md" radius="lg">
+                                                            {selectedTask?.zone || "-"}
+                                                        </Badge>
+                                                    </Grid.Col>
+                                                </Grid> */}
+                                                <Space h='sm' />
+                                                <Grid>
+                                                    <Grid.Col span={3}>
+                                                        <Text size="md" fw={500} c="dimmed">
+                                                            Source Task:
+                                                        </Text>
+                                                    </Grid.Col>
+                                                    <Grid.Col span={9}>
+                                                        <Text size="sm" fw={500}>
+                                                            {selectedTask?.taskId || "-"}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Space h='sm' />
+                                                <Grid>
+                                                    <Grid.Col span={3}>
+                                                        <Text size="md" fw={500} c="dimmed">
+                                                            Description:
+                                                        </Text>
+                                                    </Grid.Col>
+                                                    <Grid.Col span={9}>
+                                                        <Text size="sm" fw={500}>
+                                                            {selectedTask?.desc || "-"}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                {/* <Space h='sm' />
+                                                <Grid>
+                                                    <Grid.Col span={3}>
+                                                        <Text size="md" fw={500} c="dimmed">
+                                                            Interval:
+                                                        </Text>
+                                                    </Grid.Col>
+                                                    <Grid.Col span={9}>
+                                                        <Badge color="grape" size="md" radius="lg">
+                                                            {selectedTask?.interval || "-"}
+                                                        </Badge>
+                                                    </Grid.Col>
+                                                </Grid> */}
+                                                <Space h="sm" />
+                                                {/* <Text size="md" fw={500} c="dimmed">
+                                                    Man Hours
+                                                </Text> */}
+                                                <SimpleGrid cols={2}>
+                                                    {/* <Card bg='#daf7de' shadow="0" radius='md'>
+                                                        <Group justify="space-between" align="start">
+                                                            <Flex direction='column'>
+                                                                <Text fz='xs'>Min</Text>
+                                                                <Text fz='xl' fw={600}>{selectedTask?.mhs?.min?.toFixed(0) || 0} Hr</Text>
+                                                            </Flex>
+                                                            <IconClockDown color="green" size='25' />
+                                                        </Group>
+                                                    </Card>
+                                                    <Card bg='#fcebeb' shadow="0" radius='md'>
+                                                        <Group justify="space-between" align="start">
+                                                            <Flex direction='column'>
+                                                                <Text fz='xs'>Max</Text>
+                                                                <Text fz='xl' fw={600}>{selectedTask?.mhs?.max?.toFixed(0) || 0} Hr</Text>
+                                                            </Flex>
+                                                            <IconClockUp color="red" size='25' />
+                                                        </Group>
+                                                    </Card>
+                                                    <Card bg='#f3f7da' shadow="0" radius='md'>
+                                                        <Group justify="space-between" align="start">
+                                                            <Flex direction='column'>
+                                                                <Text fz='xs'>Avg</Text>
+                                                                <Text fz='xl' fw={600}>{selectedTask?.mhs?.avg?.toFixed(0) || 0} Hr</Text>
+                                                            </Flex>
+                                                            <IconClockCode color="orange" size='25' />
+                                                        </Group>
+                                                    </Card> */}
+                                                    <Card bg='#daf7de' shadow="0" radius='md'>
+                                                        <Group justify="space-between" align="start">
+                                                            <Flex direction='column'>
+                                                                <Text fz='xs'>Man Hours</Text>
+                                                                <Text fz='xl' fw={600}>{selectedTask?.estimatedHours?.toFixed(1) || 0} Hr</Text>
+                                                            </Flex>
+                                                            <IconClockHour4 color="green" size='25' />
+                                                        </Group>
+                                                    </Card>
+                                                    <Card bg='#f3f7da' shadow="0" radius='md'>
+                                                        <Group justify="space-between" align="start">
+                                                            <Flex direction='column'>
+                                                                <Text fz='xs'>Skill</Text>
+                                                                <Text fz='xl' fw={600}>{selectedTask?.skillLevel || "-"}</Text>
+                                                            </Flex>
+                                                            <IconUserCog color="orange" size='25' />
+                                                        </Group>
+                                                    </Card>
+
                                                 </SimpleGrid>
                                                 <Space h='sm' />
                                                 {/* <Grid>
